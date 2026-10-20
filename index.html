@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-m68qp0xd5dHYh48g7DXJhJ1CjbJTBIoDSwwQlPlBBEk='; style-src 'sha256-/zJKQSn4/l5upsg1+avepMRAq/+AgECA642ikA5SuNY='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ua2q6SsprKHHOnCQQr13NXR0ttT2LsvpNTGt+1cjx14='; style-src 'sha256-41HGpa8ZOhqboIF96FOUprGf15ZjhLW6sCGBTJTE2BQ='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -25,11 +25,18 @@
  #nav-write{grid-column:1/-1}
  .tab{min-width:0;font-size:1rem;overflow-wrap:break-word;white-space:normal;padding:.65rem .45rem}
 }
+
+input,textarea,.stack,.controls-date,.sizes,.entry{min-width:0;max-width:100%}
+input[type=date],input[type=datetime-local]{display:block;width:100%;font-size:.8rem}
+input::-webkit-date-and-time-value{text-align:left;min-width:0}
+button,label,summary,h1,h2{overflow-wrap:anywhere}
+dialog{padding:18px}
+@media(max-width:430px){.date-buttons{grid-template-columns:1fr}.date-buttons button:last-child{grid-column:auto}.sizes button{min-width:0;flex-basis:100%}}
 </style>
   <title>Everyday HQ — Remember your day</title>
-  <script defer>'use strict';
-// Everyday HQ 1.6: private iPhone on-device memory diary. No analytics or cloud sync.
-const SCHEMA='everydayHQ.v2', DBNAME='EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000, DRAFT_KEY='everydayHQ.draft.v1';
+  <script>'use strict';
+// Everyday HQ 1.7: private iPhone on-device memory diary. No analytics or cloud sync.
+const SCHEMA='everydayHQ.v2', DBNAME='EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000, DRAFT_KEY='everydayHQ.draft.v1', DRAFT_META_KEY='everydayHQ.draft.date.v1';
 const $=id=>document.getElementById(id);
 const nowISO=()=>new Date().toISOString();
 const validDate=v=>typeof v==='string' && !Number.isNaN(Date.parse(v));
@@ -54,7 +61,7 @@ let db=null,mode='browser',state=blank(),page='write',editingID=null,busy=false,
 function status(message){$('saveStatus').textContent=message}
 function toast(message){let t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(notificationTimeout);notificationTimeout=setTimeout(()=>t.hidden=true,4500)}
 function transact(db,mode,callback){return new Promise((resolve,reject)=>{const tx=db.transaction(STORAGE,mode),store=tx.objectStore(STORAGE);let result;try{result=callback(store)}catch(e){tx.abort();reject(e);return}tx.oncomplete=()=>resolve(result);tx.onerror=()=>reject(tx.error||new Error('Browser storage error'));tx.onabort=()=>reject(tx.error||new Error('Browser storage cancelled'))})}
-async function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DBNAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORAGE))d.createObjectStore(STORAGE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);req.onblocked=()=>reject(new Error('Close other Everyday HQ tabs and reopen this one.'))})}
+async function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DBNAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORAGE))d.createObjectStore(STORAGE)};let settled=false;const timer=setTimeout(()=>{settled=true;reject(new Error('Storage took too long to open. Close other Everyday HQ tabs and reopen this one.'))},10000);req.onsuccess=()=>{clearTimeout(timer);if(settled){req.result.close();return}settled=true;req.result.onversionchange=()=>req.result.close();resolve(req.result)};req.onerror=()=>{clearTimeout(timer);settled=true;reject(req.error)};req.onblocked=()=>{clearTimeout(timer);settled=true;reject(new Error('Close other Everyday HQ tabs and reopen this one.'))}})}
 async function getFromDB(key){return new Promise((resolve,reject)=>{const tx=db.transaction(STORAGE,'readonly');const r=tx.objectStore(STORAGE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function browserSave(next,expectedRevision){
  // Read and write everything in one transaction. A second tab must not silently
@@ -79,12 +86,26 @@ async function browserSave(next,expectedRevision){
  });
 }
 function saveDraft(){
- try{const text=$('memoryText').value; if(text.trim()){localStorage.setItem(DRAFT_KEY,text);status('Unsaved draft — press SAVE MEMORY when ready.')}else{localStorage.removeItem(DRAFT_KEY);status('Ready to save.')}}catch(_){status('Unsaved draft — press SAVE MEMORY when ready.')}
+ const text=$('memoryText').value;
+ try{
+  if(text.trim()){
+   localStorage.setItem(DRAFT_KEY,text);
+   localStorage.setItem(DRAFT_META_KEY,JSON.stringify({text,occurredAt:$('occurredAt').value}));
+   status('Draft kept on this device — press SAVE MEMORY when ready.');
+  }else{clearDraft();status('Ready to save.')}
+ }catch(_){status('Draft could not be kept — press SAVE MEMORY before leaving.')}
 }
 function loadDraft(){
- try{const draft=localStorage.getItem(DRAFT_KEY);if(draft){$('memoryText').value=draft;status('Draft restored — press SAVE MEMORY when ready.')}}catch(_){}
+ try{
+  const draft=localStorage.getItem(DRAFT_KEY);
+  if(draft){
+   $('memoryText').value=draft;
+   try{const meta=JSON.parse(localStorage.getItem(DRAFT_META_KEY));if(meta?.text===draft&&validDate(meta.occurredAt)){$('occurredAt').value=meta.occurredAt;$('whenDetails').open=true}}catch(_){}
+   status('Draft restored — press SAVE MEMORY when ready.');
+  }
+ }catch(_){status('Draft storage unavailable. Save your memory before leaving.')}
 }
-function clearDraft(){try{localStorage.removeItem(DRAFT_KEY)}catch(_){}}
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);localStorage.removeItem(DRAFT_META_KEY)}catch(_){}}
 async function initStorage(){
  // Windows executable serves a local file-backed API. The hosted PWA uses IndexedDB.
  if(location.hostname==='127.0.0.1'||location.hostname==='localhost'){
@@ -151,18 +172,18 @@ function render(){
 }
 function renderDeleted(){
  const place=$('deletedList');if(!place)return;
- const deleted=sortItems(state.items.filter(x=>x.deletedAt)).slice(0,20);place.replaceChildren();
+ const deleted=sortItems(state.items.filter(x=>x.deletedAt));place.replaceChildren();
  if(!deleted.length){empty(place,'No recently deleted memories.');return}
  for(const m of deleted){const row=document.createElement('div');row.className='entry';const p=document.createElement('p');p.textContent=m.text.slice(0,260);const b=document.createElement('button');b.type='button';b.className='outline';b.textContent='Restore';b.dataset.action='restore';b.dataset.id=m.id;row.append(p,b);place.append(row)}
 }
 function navigate(name){if(!['write','days','find','settings'].includes(name))return;page=name;document.querySelectorAll('.page').forEach(el=>el.hidden=el.id!=='page-'+name);document.querySelectorAll('.tab').forEach(button=>{const selected=button.dataset.page===name;button.classList.toggle('selected',selected);selected?button.setAttribute('aria-current','page'):button.removeAttribute('aria-current')});if(name==='days'&&!$('dayPicker').value)$('dayPicker').value=dayKey(nowISO());render();window.scrollTo(0,0)}
-function saveFile(name,content){const blob=new Blob([content],{type:'application/json'}),link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function backup(){const backup={schema:SCHEMA,exportedAt:nowISO(),revision:state.revision,items:state.items,preferences:state.preferences};saveFile('EverydayHQ-backup-'+dayKey(nowISO())+'.json',JSON.stringify(backup,null,2));toast('Backup downloaded. Store the file somewhere safe.')}
+function saveFile(name,content){const blob=new Blob([content],{type:'application/json'}),link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+function backup(){const backup={schema:SCHEMA,exportedAt:nowISO(),revision:state.revision,items:state.items,preferences:state.preferences};saveFile('EverydayHQ-backup-'+dayKey(nowISO())+'.json',JSON.stringify(backup,null,2));toast('Backup prepared. Save the file to Files and check it is there.')}
 function canonicalItem(item){const {id,...rest}=item;return JSON.stringify(rest)}
 function fixedHash(s){let hash=2166136261;for(let i=0;i<s.length;i++){hash^=s.charCodeAt(i);hash=Math.imul(hash,16777619)}return (hash>>>0).toString(16)}
 async function restoreBackup(file){
  if(!file)return;
- if(file.size>5*1024*1024){toast('This file is too large.');return}
+ if(file.size>256*1024*1024){toast('This file is too large.');return}
  let parsed;try{parsed=validated(JSON.parse(await file.text()))}catch(err){toast(err.message);return}
  const known=new Map(state.items.map(item=>[item.id,item]));
  const bodies=new Set(state.items.map(canonicalItem));
@@ -196,6 +217,7 @@ async function onAction(e){const button=e.target.closest('button[data-action]');
 function wire(){
  $('dayPicker').value=dayKey(nowISO());
  $('memoryText').addEventListener('input',saveDraft);
+ $('occurredAt').addEventListener('input',saveDraft);
  $('addForm').addEventListener('submit',async e=>{
   e.preventDefault();if(busy)return;const raw=$('memoryText').value,txt=raw.trim();if(!txt){toast('Write something first.');return}
   const supplied=$('occurredAt').value;if(supplied&&!validDate(supplied)){toast('Choose a valid date and time.');return}
@@ -204,12 +226,12 @@ function wire(){
   $('saveBtn').disabled=true;status('Saving…');
   const ok=await update(next=>next.items.push({id:uuid(),text:txt,occurredAt,createdAt:stamp,updatedAt:stamp,deletedAt:null}));
   $('saveBtn').disabled=false;
-  if(ok){$('memoryText').value='';clearDraft();$('occurredAt').value='';$('whenDetails').open=false;toast('Memory saved.');$('memoryText').focus()}
+  if(ok){if($('memoryText').value===raw&&$('occurredAt').value===supplied){$('memoryText').value='';clearDraft();$('occurredAt').value='';$('whenDetails').open=false}else{saveDraft()}toast('Memory saved.');$('memoryText').focus()}
  });
  document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
  $('settingsOpen').addEventListener('click',()=>navigate('settings'));
  $('settingsClose').addEventListener('click',()=>navigate('write'));
- $('todayAll').addEventListener('click',()=>{ $('dayPicker').value=dayKey(nowISO());navigate('days')});
+ $('todayAll').addEventListener('click',()=>{dayMode='today'; $('dayPicker').value=dayKey(nowISO());navigate('days')});
  $('showToday').addEventListener('click',()=>{dayMode='today';$('dayPicker').value=dayKey(nowISO());render()});
  $('showYesterday').addEventListener('click',()=>{dayMode='today';const d=new Date();d.setDate(d.getDate()-1);$('dayPicker').value=dayKey(d.toISOString());render()});
  $('showAll').addEventListener('click',()=>{dayMode='all';render()});
@@ -229,8 +251,9 @@ function wire(){
  window.addEventListener('storage',e=>{if(e.key==='everyday-hq-refresh')toast('This diary was changed in another tab. Reopen it before editing.')});
 }
 async function start(){try{if(location.protocol==='file:')throw new Error('Open the secure website in Safari rather than opening this HTML file in Files.');wire();await initStorage();$('boot').hidden=true;$('app').hidden=false;render();status('Ready to save.');loadDraft();}
- catch(err){$('boot').hidden=true;$('fatal').hidden=false;$('fatalDetail').textContent=err.message||'Unknown storage error';console.error(err)}}
-start();
+ catch(err){$('app').hidden=true;$('boot').hidden=true;$('fatal').hidden=false;$('fatalDetail').textContent=err.message||'Unknown storage error';console.error(err)}}
+// Inline scripts ignore defer. Wait until the body and error panel exist.
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start,{once:true})}else{start()}
 </script>
 </head>
 <body>
@@ -261,7 +284,7 @@ start();
           <button class="primary full" id="saveBtn" type="submit">SAVE MEMORY</button>
         </form>
         <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready to save.</div>
-        <p class="device-note">Memories stay on this iPhone. Keep a backup in Files or iCloud Drive.</p>
+        <p class="device-note">Memories stay on this iPhone. Keep a backup in Files. Choosing iCloud Drive uploads that backup to your Apple account.</p>
         <div class="divider"></div>
         <div class="row titlebar"><h2>Recorded today</h2><button class="outline tiny" id="todayAll" type="button">See My Days</button></div>
         <div id="todayList" class="entries"></div>
@@ -305,13 +328,13 @@ start();
         </div>
         <div class="panel stack"><h2>Recently deleted</h2><p>Restore a memory you deleted by mistake.</p><div class="entries" id="deletedList"></div></div>
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
-        <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. Turn on Open as Web App and tap Add. Start recording memories using your new Home Screen icon.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.6 — iPhone diary.</p><p>No microphone, reminders or accounts. An internet connection is required to open the site reliably. Draft text is kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.7 — iPhone diary.</p><p>No microphone, reminders or accounts. An internet connection is required to open the site reliably. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Your private daily memory diary</footer>
   </div>
-  <div id="boot" class="boot" role="status">Opening Everyday HQ…</div>
+  <div id="boot" class="boot" role="status">Opening Everyday HQ…<p class="help">If this stays here, close other Everyday HQ tabs and reopen this page. Do not clear Safari data.</p><noscript><p>JavaScript must be enabled in Safari to open your diary.</p></noscript></div>
   <div id="fatal" class="fatal" role="alert" hidden><h1>Could not load memories</h1><p>Your saved information was not changed. Close and reopen the app. Do not record anything new here until the problem is resolved.</p><p id="fatalDetail"></p></div>
   <dialog id="editDialog" aria-labelledby="editTitle"><form id="editForm" class="stack" method="dialog">
       <h2 id="editTitle">Edit memory</h2>

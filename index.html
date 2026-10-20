@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7IbZakK4vXe/Hj6RDL03qv18mISzzGYJzGNNptcashI='; style-src 'sha256-NYH6MwpuD3aVBYlE7JiiyceWSHbSS2c3YULXL9tFnAE='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7IbZakK4vXe/Hj6RDL03qv18mISzzGYJzGNNptcashI='; style-src 'sha256-x4PaxobXO5DZmeMxhsThGfsyySoquT6kXv2YOzlyK4A='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -44,6 +44,7 @@ dialog{padding:18px}
 .check-row{display:flex;gap:14px;align-items:center;font-size:.9rem}.check-row input{width:36px;height:36px;flex-shrink:0;accent-color:#fff}
 .speech-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .entry .actions button{min-height:56px}
+@media(max-width:430px){.hub-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-tabs [data-hub=memory]{grid-column:1/-1}}
 @media(max-width:360px){.hub-tabs{grid-template-columns:1fr}.hub-tabs .tab{font-size:1rem}}
 </style>
   <title>Everyday HQ — Remember your day</title>

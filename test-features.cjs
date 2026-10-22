@@ -5,11 +5,12 @@ const html=fs.readFileSync(require('node:path').join(__dirname,'index.html'),'ut
 const pause=()=>new Promise(r=>setTimeout(r,10));
 async function until(fn){for(let n=0;n<300;n++){if(fn())return;await pause()}throw Error('Timed out')}
 let voices=[{name:'Synthetic local English voice',lang:'en-GB',localService:true}],spoken=[],cancelCount=0,pauseCount=0,resumeCount=0;
-async function open(storage={},url='https://p1ckz.github.io/everyday-hq-memory/'){
+async function open(storage={},url='https://p1ckz.github.io/everyday-hq-memory/',brokenSpeech=false){
  const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
  const dom=new JSDOM(html,{url,runScripts:'dangerously',virtualConsole:vc,beforeParse(w){
   w.indexedDB=idb;w.structuredClone=structuredClone;w.confirm=()=>true;w.scrollTo=()=>{};
   w.speechSynthesis={getVoices:()=>voices,speak:u=>{spoken.push(u);u.onstart?.()},cancel:()=>cancelCount++,pause:()=>pauseCount++,resume:()=>resumeCount++,addEventListener:()=>{}};
+  if(brokenSpeech)for(const key of ['getVoices','cancel','addEventListener'])w.speechSynthesis[key]=()=>{throw Error('Synthetic unavailable speech API')};
   w.SpeechSynthesisUtterance=class{constructor(text){this.text=text}};
   w.HTMLDialogElement.prototype.showModal=function(){this.open=true};w.HTMLDialogElement.prototype.close=function(){this.open=false};
   for(const [key,value]of Object.entries(storage))w.localStorage.setItem(key,value);
@@ -53,9 +54,22 @@ function close(dom){dom.window.eval('db.close()');dom.window.close()}
  w.speakReadingText();spoken.at(-1).onerror();assert(d.getElementById('speechStatus').textContent.startsWith('Could not read aloud.'));
  voices=[{lang:'en-GB',localService:false}];w.updateSpeechAvailability();assert(d.getElementById('speakBtn').disabled);const remoteBefore=spoken.length;w.speakReadingText();assert.equal(spoken.length,remoteBefore);
  voices=[{lang:'en-GB',localService:true}];w.updateSpeechAvailability();w.speakReadingText();w.navigate('write');assert.equal(w.eval('currentUtterance'),null);assert(d.getElementById('speechStatus').textContent==='Stopped.');
+ // Editing during a pending commit must retain the newer text and date.
+ w.selectEdit(state(w).items[0].id);
+ field(w,'editText','SYNTHETIC first edit');field(w,'editOccurred','2026-10-18T11:00');
+ d.getElementById('editForm').dispatchEvent(new w.Event('submit',{cancelable:true,bubbles:true}));
+ field(w,'editText','SYNTHETIC newer edit');field(w,'editOccurred','2026-10-18T12:00');
+ await settle(w);assert.equal(state(w).items[0].text,'SYNTHETIC first edit');assert.equal(d.getElementById('editText').value,'SYNTHETIC newer edit');assert.equal(d.getElementById('editOccurred').value,'2026-10-18T12:00');assert(d.getElementById('editDialog').open);
+ d.getElementById('editForm').dispatchEvent(new w.Event('submit',{cancelable:true,bubbles:true}));await settle(w);assert.equal(state(w).items[0].text,'SYNTHETIC newer edit');assert.equal(d.getElementById('editDialog').open,false);
+ // A post-commit display error must not undo the saved revision or say NOT SAVED.
+ const savedRender=w.render,beforeRevision=state(w).revision;w.render=()=>{throw Error('Synthetic redraw failure')};
+ const committed=await w.update(next=>next.preferences.scale=1.2);assert.equal(committed,true);assert.equal(state(w).revision,beforeRevision+1);assert(d.getElementById('saveStatus').textContent.startsWith('Saved on this device.'));w.render=savedRender;
+ // A following transaction must use the committed revision successfully.
+ assert.equal(await w.update(next=>next.preferences.scale=1.4),true);
+ const speechFault=await open({},'https://p1ckz.github.io/everyday-hq-memory/',true);assert.equal(speechFault.window.document.getElementById('app').hidden,false);assert(speechFault.window.document.getElementById('speakBtn').disabled);speechFault.window.navigate('vision');field(speechFault.window,'visionText','SYNTHETIC reading without speech');speechFault.window.openReader();speechFault.window.navigate('write');assert.equal(speechFault.window.eval('page'),'write');close(speechFault);
  const local=storage(w);close(dom);dom=await open(local);w=dom.window;d=w.document;
  assert.equal(d.getElementById('visionText').value,text);assert.equal(state(w).preferences.vision.font,80);assert.equal(state(w).preferences.vision.focus,true);assert(state(w).items[0].pinned);
  // Untrusted backup preferences cannot inject styles or invalidate the layout.
  const badPrefs=w.validated({...old,preferences:{scale:999,vision:{font:'100vw',line:-2,spacing:Infinity,focus:'yes'}}});assert.equal(badPrefs.preferences.vision.font,40);assert.equal(badPrefs.preferences.vision.focus,false);
- const testDom=await open({},'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1');assert.equal(state(testDom.window).items.length,0);assert.equal(testDom.window.document.getElementById('visionText').value,'');assert.equal(testDom.window.document.getElementById('layoutTestNotice').hidden,false);await testDom.window.restoreBackup({size:100,text:async()=>JSON.stringify({...old,items:[{...old.items[0],id:'isolated-test'}]})});assert.equal(state(w).items.length,1);close(testDom);close(dom);console.log('PASS: old backup compatibility; pin/unpin persistence and backup pin merge; exact daily recap; assistant keyword matching and deleted exclusion; reader from memory; safe text rendering; size/line/letter controls; focus navigation; reading draft/preferences reopen; mocked local-only speech, chunk queue, pause/resume/stop/error/cancellation; remote voice refusal; invalid preference defaults; isolated layout data store.');
+ const testDom=await open({},'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1');assert.equal(state(testDom.window).items.length,0);assert.equal(testDom.window.document.getElementById('visionText').value,'');assert.equal(testDom.window.document.getElementById('layoutTestNotice').hidden,false);await testDom.window.restoreBackup({size:100,text:async()=>JSON.stringify({...old,items:[{...old.items[0],id:'isolated-test'}]})});assert.equal(state(w).items.length,1);close(testDom);close(dom);console.log('PASS: old backup compatibility; pin/unpin persistence and backup pin merge; exact daily recap; assistant keyword matching and deleted exclusion; reader from memory; safe text rendering; size/line/letter controls; focus navigation; reading draft/preferences reopen; mocked local-only speech, chunk queue, pause/resume/stop/error/cancellation; remote voice refusal; invalid preference defaults; isolated layout data store; edits typed during commit; truthful post-commit redraw failure; speech API failures do not block startup or navigation.');
 })().catch(e=>{console.error(e);process.exitCode=1});

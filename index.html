@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7IbZakK4vXe/Hj6RDL03qv18mISzzGYJzGNNptcashI='; style-src 'sha256-x4PaxobXO5DZmeMxhsThGfsyySoquT6kXv2YOzlyK4A='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-QjJcTpuTpQ1vvEPHz4NcZnlG8YhM1aLd2rxyCgta0TY='; style-src 'sha256-x4PaxobXO5DZmeMxhsThGfsyySoquT6kXv2YOzlyK4A='; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -49,7 +49,7 @@ dialog{padding:18px}
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.8: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.8.1: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -146,9 +146,14 @@ async function persist(next){
 async function update(modifier){
  if(busy)return false;
  busy=true;const before=structuredClone(state),next=structuredClone(state);
- try{modifier(next);next.schema=SCHEMA;const persisted=await persist(validated(next));state=persisted;status('Saved safely on this device.');render();return true}
+ try{modifier(next);next.schema=SCHEMA;state=await persist(validated(next))}
  catch(err){state=before;status('NOT SAVED. Your previous memories have not changed.');toast(err.message||'Could not save; try again.');return false}
  finally{busy=false}
+ // A completed storage transaction must never be rolled back in memory merely
+ // because a view fails to redraw. Retain its revision and report the truth.
+ status('Saved safely on this device.');
+ try{render()}catch(err){status('Saved on this device. Reopen the app to refresh the display.');toast('Your save completed. Reopen the app to refresh the display.');console.error(err)}
+ return true;
 }
 function sortItems(items){return [...items].sort((a,b)=>Date.parse(b.occurredAt)-Date.parse(a.occurredAt)||Date.parse(b.createdAt)-Date.parse(a.createdAt))}
 function visibleItems(){return sortItems(state.items.filter(item=>!item.deletedAt))}
@@ -277,9 +282,9 @@ function wire(){
  $('cancelEdit').addEventListener('click',()=>$('editDialog').close());
  $('editForm').addEventListener('submit',async e=>{
   e.preventDefault();const id=editingID,item=state.items.find(x=>x.id===id);if(!item)return;
-  const txt=$('editText').value.trim(),chosen=$('editOccurred').value;if(!txt||!validDate(chosen)){toast('Add valid text, date and time.');return}
+  const raw=$('editText').value,txt=raw.trim(),chosen=$('editOccurred').value;if(!txt||!validDate(chosen)){toast('Add valid text, date and time.');return}
   const ok=await update(next=>{const r=next.items.find(x=>x.id===id);r.text=txt;r.occurredAt=new Date(chosen).toISOString();r.updatedAt=nowISO()});
-  if(ok){$('editDialog').close();editingID=null;toast('Changes saved.')}
+  if(ok){if($('editText').value===raw&&$('editOccurred').value===chosen){$('editDialog').close();editingID=null;toast('Changes saved.')}else{toast('Earlier changes saved. Your newer edits are still here — save again when ready.')}}
  });
  document.querySelectorAll('[data-scale]').forEach(b=>b.addEventListener('click',()=>update(next=>{next.preferences.scale=Number(b.dataset.scale)})));
  $('exportBtn').addEventListener('click',backup);
@@ -357,8 +362,10 @@ function loadMemoryInReader(item) {
 }
 function localVoice() {
  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return null;
- const voices=window.speechSynthesis.getVoices().filter(v=>v.localService===true);
- return voices.find(v=>/^en-GB$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+ try{
+  const voices=window.speechSynthesis.getVoices().filter(v=>v.localService===true);
+  return voices.find(v=>/^en-GB$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+ }catch(_){return null}
 }
 function updateSpeechAvailability() {
  const available=Boolean(localVoice());$('speakBtn').disabled=!available;
@@ -366,7 +373,7 @@ function updateSpeechAvailability() {
 }
 function stopSpeaking(message='Stopped.') {
  speechSession++;currentUtterance=null;speechPaused=false;
- if('speechSynthesis' in window)window.speechSynthesis.cancel();
+ try{if('speechSynthesis' in window)window.speechSynthesis.cancel()}catch(_){}
  $('speechStatus').textContent=message;$('pauseSpeech').textContent='Pause';$('pauseSpeech').disabled=true;$('stopSpeech').disabled=true;
 }
 function speakReadingText() {
@@ -400,7 +407,7 @@ function wireVision() {
  $('speakBtn').addEventListener('click',speakReadingText);
  $('pauseSpeech').addEventListener('click',()=>{if(!currentUtterance)return;const synth=window.speechSynthesis;if(speechPaused){synth.resume();speechPaused=false;$('pauseSpeech').textContent='Pause';$('speechStatus').textContent='Reading aloud.'}else{synth.pause();speechPaused=true;$('pauseSpeech').textContent='Resume';$('speechStatus').textContent='Paused.'}});
  $('stopSpeech').addEventListener('click',()=>stopSpeaking());
- if('speechSynthesis' in window)window.speechSynthesis.addEventListener('voiceschanged',updateSpeechAvailability);
+ try{if('speechSynthesis' in window)window.speechSynthesis.addEventListener('voiceschanged',updateSpeechAvailability)}catch(_){}
  window.addEventListener('pagehide',()=>stopSpeaking());updateSpeechAvailability();
 }
 
@@ -517,7 +524,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Recently deleted</h2><p>Restore a memory you deleted by mistake.</p><div class="entries" id="deletedList"></div></div>
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.8 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. An internet connection is required to open the site reliably. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.8.1 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. An internet connection is required to open the site reliably. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Your private daily memory diary</footer>

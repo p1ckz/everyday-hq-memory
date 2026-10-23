@@ -26,16 +26,16 @@ function workerHarness({badShell=false}={}){
  const sw=workerHarness();await sw.event('install');assert.equal(sw.skipped,0);assert.equal(sw.fetches,1);
  sw.stores.set('everyday-hq-shell-/everyday-hq-memory/-old',new Map());sw.stores.set('unrelated-user-cache',new Map());
  await sw.event('activate');assert.equal(sw.claimed,1);assert(sw.deleted.includes('everyday-hq-shell-/everyday-hq-memory/-old'));assert(sw.stores.has('unrelated-user-cache'));
- sw.offline();const response=await sw.event('fetch',{request:{method:'GET',mode:'navigate',url:'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1'}});assert((await response.text()).includes('Everyday HQ version 1.9.0'));assert.equal(sw.fetches,1);
+ sw.offline();const response=await sw.event('fetch',{request:{method:'GET',mode:'navigate',url:'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1'}});assert((await response.text()).includes('Everyday HQ version 1.9.1'));assert.equal(sw.fetches,1);
  assert.equal(await sw.event('fetch',{request:{method:'GET',mode:'cors',url:'https://elsewhere.invalid/private'}}),undefined);assert.equal(sw.fetches,1);
- let ready;await sw.event('message',{data:{type:'OFFLINE_STATUS'},ports:[{postMessage:x=>ready=x}]});assert(ready.ready);assert.equal(ready.version,'1.9.0');
+ let ready;await sw.event('message',{data:{type:'OFFLINE_STATUS'},ports:[{postMessage:x=>ready=x}]});assert(ready.ready);assert.equal(ready.version,'1.9.1');
  await sw.event('message',{data:{type:'ACTIVATE_UPDATE'}});assert.equal(sw.skipped,1);
  const bad=workerHarness({badShell:true});await assert.rejects(bad.event('install'));assert.equal(bad.stores.size,0);
  // Stage 2: new app functionality with the existing IndexedDB schema.
  let dom=await open(),w=dom.window,d=w.document;
  const now=new Date(),stamp=now.toISOString(),row=(id,text,date=stamp)=>({id,text,occurredAt:date,createdAt:stamp,updatedAt:stamp,deletedAt:null});
  await w.update(next=>next.items.push(row('sample','SYNTHETIC Sam: discuss the garden appointment.'),row('literal','SYNTHETIC C++ [sample] <img src=x onerror=bad()>')));
- assert.equal(w.searchMemories(state(w).items,'sam garden').length,1);assert.equal(w.searchMemories(state(w).items,'"garden appointment"').length,1);assert.equal(w.searchMemories(state(w).items,'"appointment garden"').length,0);
+ assert.equal(w.searchMemories(state(w).items,'sam garden').length,1);assert.equal(w.searchMemories(state(w).items,'"garden appointment"').length,1);assert.equal(w.searchMemories(state(w).items,'"appointment garden"').length,0);assert.equal(w.searchMemories(state(w).items,'“garden appointment”').length,1);
  w.navigate('find');field(w,'searchInput','C++ [sample]');assert.equal(d.querySelectorAll('#searchList mark').length,2);assert.equal(d.querySelectorAll('#searchList img').length,0);
  d.getElementById('searchFrom').value=w.eval('dayKey(nowISO())');d.getElementById('searchTo').value=w.eval('dayKey(nowISO())');w.render();assert(d.getElementById('findCount').textContent.startsWith('1 matching'));
  d.getElementById('searchFrom').value='2099-01-01';w.render();assert(d.getElementById('findCount').textContent.includes('From date'));d.getElementById('clearSearch').click();assert.equal(d.getElementById('searchTo').value,'');

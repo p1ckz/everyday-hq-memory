@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const {JSDOM,VirtualConsole}=require('jsdom'),{IDBFactory}=require('fake-indexeddb');
 const html=fs.readFileSync(__dirname+'/index.html','utf8'),workerCode=fs.readFileSync(__dirname+'/sw.js','utf8');
+const RELEASE=workerCode.match(/const VERSION='([^']+)'/)[1];
 const wait=async(fn)=>{for(let n=0;n<300;n++){if(fn())return;await new Promise(r=>setTimeout(r,10))}throw Error('Timed out')};
 const idb=new IDBFactory();
 async function open(storage={}){
@@ -26,9 +27,9 @@ function workerHarness({badShell=false}={}){
  const sw=workerHarness();await sw.event('install');assert.equal(sw.skipped,0);assert.equal(sw.fetches,1);
  sw.stores.set('everyday-hq-shell-/everyday-hq-memory/-old',new Map());sw.stores.set('unrelated-user-cache',new Map());
  await sw.event('activate');assert.equal(sw.claimed,1);assert(sw.deleted.includes('everyday-hq-shell-/everyday-hq-memory/-old'));assert(sw.stores.has('unrelated-user-cache'));
- sw.offline();const response=await sw.event('fetch',{request:{method:'GET',mode:'navigate',url:'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1'}});assert((await response.text()).includes('Everyday HQ version 1.9.1'));assert.equal(sw.fetches,1);
+ sw.offline();const response=await sw.event('fetch',{request:{method:'GET',mode:'navigate',url:'https://p1ckz.github.io/everyday-hq-memory/?layout-test=1'}});assert((await response.text()).includes('Everyday HQ version '+RELEASE));assert.equal(sw.fetches,1);
  assert.equal(await sw.event('fetch',{request:{method:'GET',mode:'cors',url:'https://elsewhere.invalid/private'}}),undefined);assert.equal(sw.fetches,1);
- let ready;await sw.event('message',{data:{type:'OFFLINE_STATUS'},ports:[{postMessage:x=>ready=x}]});assert(ready.ready);assert.equal(ready.version,'1.9.1');
+ let ready;await sw.event('message',{data:{type:'OFFLINE_STATUS'},ports:[{postMessage:x=>ready=x}]});assert(ready.ready);assert.equal(ready.version,RELEASE);
  await sw.event('message',{data:{type:'ACTIVATE_UPDATE'}});assert.equal(sw.skipped,1);
  const bad=workerHarness({badShell:true});await assert.rejects(bad.event('install'));assert.equal(bad.stores.size,0);
  // Stage 2: new app functionality with the existing IndexedDB schema.

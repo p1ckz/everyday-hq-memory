@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-2azZz8HFOX2GbIeMVo4o7pgtWu6ogICwiCQ0tqHfP/Q='; style-src 'sha256-OwEm0puy3SQK3V4ExgsRBERL4fVQmy6vPabDurvjqP4='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-Zjcx8FkO/jYscoS7sG05Qm27LSqyQoggtG7c6zHwRwY='; style-src 'sha256-OwEm0puy3SQK3V4ExgsRBERL4fVQmy6vPabDurvjqP4='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -51,7 +51,7 @@ mark{background:#fff;color:#000;font-weight:900;padding:0 .03em}#page-find .when
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.9.1: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.9.2: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -537,7 +537,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
   <div class="shell" id="app" hidden>
     <p class="panel help" id="layoutTestNotice" hidden>Layout test only — this uses separate test storage, not your live diary.</p>
     <header class="top">
-      <div class="brand"><span class="brandmark" aria-hidden="true">EH</span><div><strong>EVERYDAY HQ</strong><span>Remember your day.</span></div></div>
+      <div class="brand"><span class="brandmark" role="img" aria-label="Earle’s Bureau"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30H29C38 30 38 20 29 20H24M24 10H29C37 10 37 20 29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>EVERYDAY HQ</strong><span>Earle’s Bureau</span></div></div>
       <button class="outline tiny" id="settingsOpen" type="button" aria-label="Open settings and backups">Settings</button>
     </header>
     <nav class="tabs hub-tabs" aria-label="HQ sections">
@@ -647,7 +647,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.9.1 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.9.2 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Your private daily memory diary</footer>

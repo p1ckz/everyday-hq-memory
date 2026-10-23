@@ -32,7 +32,7 @@ function close(dom){dom.window.eval('db.close()');dom.window.close()}
  d.querySelector('#plansList [data-action=pin]').click();await settle(w);assert.equal(state(w).items[0].pinned,true);assert.equal(d.querySelectorAll('#pinnedList article').length,1);
  await w.restoreBackup({size:100,text:async()=>JSON.stringify(old)});assert.equal(state(w).items.length,1);assert(state(w).items[0].pinned);
  // Importing pins from a new backup adds the pin without duplicating a memory.
- let exported;w.saveFile=(n,b)=>{exported=JSON.parse(b)};w.backup();assert(exported.items[0].pinned);await w.update(next=>next.items[0].pinned=false);
+ let exported;w.saveFile=(n,b)=>{exported=JSON.parse(b)};await w.backup();assert(exported.items[0].pinned);await w.update(next=>next.items[0].pinned=false);
  await w.restoreBackup({size:100,text:async()=>JSON.stringify(exported)});assert.equal(state(w).items.length,1);assert(state(w).items[0].pinned);
  w.navigate('days');d.getElementById('dayPicker').value='2026-10-18';d.getElementById('dayPicker').dispatchEvent(new w.Event('change'));
  assert(d.getElementById('recapCount').textContent.startsWith('1 memory recorded'));assert(d.getElementById('recapList').textContent.includes(old.items[0].text));

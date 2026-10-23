@@ -45,7 +45,7 @@ function close(dom){dom.window.eval('db?.close()');dom.window.close()}
  d.querySelector('#dayList [data-action=delete]').click();await settle(w);assert(saved(w).items[0].deletedAt);assert.equal(d.querySelectorAll('#dayList article').length,0);
  w.navigate('settings');d.querySelector('#deletedList button').click();await settle(w);assert.equal(saved(w).items[0].deletedAt,null);
  d.querySelector('[data-scale="1.4"]').click();await settle(w);assert.equal(d.documentElement.style.getPropertyValue('--scale'),'1.4');
- let exported;w.saveFile=(name,body)=>{exported=JSON.parse(body)};w.backup();assert.equal(exported.items.length,2);assert.equal(exported.schema,'everydayHQ.v2');
+ let exported;w.saveFile=(name,body)=>{exported=JSON.parse(body)};await w.backup();assert.equal(exported.items.length,2);assert.equal(exported.schema,'everydayHQ.v2');
  const file=items=>({size:100,text:async()=>JSON.stringify({...exported,items})});
  await w.restoreBackup(file(exported.items));assert.equal(saved(w).items.length,2);
  const changed=structuredClone(exported.items);changed[0].text='SYNTHETIC imported version';

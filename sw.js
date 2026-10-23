@@ -1,6 +1,6 @@
 'use strict';
 // Cache public application HTML only. Never read, cache or send diary data.
-const VERSION='1.9.2';
+const VERSION='1.10.0';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('index.html',ROOT).href;
 const PREFIX='everyday-hq-shell-'+ROOT.pathname+'-';

@@ -1,7 +1,7 @@
 {
   "name": "everyday-hq-checks",
   "private": true,
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "Development checks only; the deployed app has no dependencies or build step.",
   "scripts": {
     "test": "node test-memory.cjs && node test-features.cjs && node test-next.cjs"

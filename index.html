@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-Zjcx8FkO/jYscoS7sG05Qm27LSqyQoggtG7c6zHwRwY='; style-src 'sha256-OwEm0puy3SQK3V4ExgsRBERL4fVQmy6vPabDurvjqP4='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-lD04HfZ5WhGFEziN0GhsWn16jNMHFKkFmh7Tc3aUR1Q='; style-src 'sha256-fZ7h82gAKPjVFDwsjFlmxJXkBMAwM5tUDHBDYZQ0HXo='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
   <meta name="description" content="A clear, simple diary for remembering your day.">
   <style>:root{color-scheme:dark;--scale:1;--bg:#070707;--panel:#171717;--text:#fff;--border:#ededed;--focus:#ffde59}
-*{box-sizing:border-box}html{font-size:calc(22px * var(--scale));scroll-behavior:auto}body{margin:0;background:var(--bg);color:var(--text);font:500 1rem/1.65 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}button,input,textarea{font:inherit;color:var(--text)}input,textarea{background:#111;border:2px solid #fff;border-radius:12px;padding:.85rem;width:100%}input[type=date],input[type=datetime-local]{color-scheme:dark;min-height:62px}input[type=file]{font-size:.85rem}textarea{resize:vertical;min-height:188px;line-height:1.65}::placeholder{color:#d0d0d0;opacity:1}h1,h2,p{margin:0}h1{font-size:1.65rem;line-height:1.22;letter-spacing:-.025em;margin-bottom:.55rem}h2{font-size:1.2rem;line-height:1.3}p{margin-bottom:.5rem}.intro{margin-bottom:1.1rem}.shell{width:min(100% - 40px,790px);margin:0 auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:2px solid #fff;padding:22px 0}.brand{display:flex;align-items:center;gap:13px;min-width:0}.brandmark{display:grid;place-items:center;width:48px;height:48px;border:2px solid #fff;border-radius:12px;font-weight:800;font-size:19px;flex-shrink:0}.brand strong{display:block;font-size:1rem;line-height:1.2;letter-spacing:.02em}.brand span:not(.brandmark){display:block;font-size:.82rem}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:20px 0 25px}.tab{border:2px solid #fff;color:#fff;background:#101010;font-weight:800;padding:.8rem .25rem;border-radius:12px;line-height:1.2;min-height:67px}.tab.selected{background:#292929;color:#fff;border-width:4px;text-decoration:underline;text-underline-offset:5px}.tab:hover,.outline:hover{background:#333}.tab.selected:hover{background:#333}main{padding-bottom:2rem}.stack{display:grid;gap:.8rem}.primary,.outline{border:2px solid #fff;border-radius:12px;background:#131313;color:#fff;padding:.6rem 1rem;font-weight:850;min-height:62px;cursor:pointer;line-height:1.3}.primary{background:#303030;color:#fff;border-width:4px}.primary:hover{background:#444}.outline:hover{background:#333}.primary:disabled,.outline:disabled{opacity:.6;cursor:not-allowed}.full{width:100%}.tiny{font-size:.78rem;padding:.5rem .65rem;min-height:48px;flex-shrink:0}.when{border:2px solid #7d7d7d;padding:.65rem .8rem;border-radius:12px}.when summary{cursor:pointer;font-size:.91rem;font-weight:750}.when label{display:block;margin-top:.65rem}.when input{margin-top:.3rem}.soft,.help{font-size:.8rem}.help{line-height:1.5}.divider{height:2px;background:#747474;margin:1.55rem 0}.row{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap}.titlebar{margin-bottom:.75rem}.save-status{font-weight:800;min-height:1.8rem;margin-top:.5rem}.entries{display:grid;gap:12px;margin-top:.8rem}.entry,.panel,.empty{background:var(--panel);border:2px solid #aaa;border-radius:14px;padding:17px 20px;overflow-wrap:anywhere}.entry{border-color:#fff}.entry p{white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 .7rem}.entry .whenline{font-weight:800;font-size:.82rem;margin-bottom:.55rem}.entry .actions{display:flex;gap:8px;flex-wrap:wrap}.entry .actions button{min-height:45px;padding:.35rem .7rem;font-size:.85rem}.empty{line-height:1.5}.controls-date{border:2px solid #aaa;border-radius:14px;padding:17px;margin:15px 0 20px;display:grid;gap:14px}.date-buttons{display:flex;flex-wrap:wrap;gap:9px}.date-buttons button{flex:1}.controls-date label,label{font-weight:750;display:block}#chosenDateHeading{margin:1.2rem 0 .65rem}.info{padding:10px 0}#searchInput{margin-top:10px}.sizes{display:flex;gap:9px;flex-wrap:wrap}.sizes button{flex:1;min-width:150px}.sizes button[aria-pressed=true]{background:#303030;color:#fff;border-width:4px;text-decoration:underline}.panel{margin-bottom:16px}footer{border-top:1px solid #666;padding:16px 0 26px;font-size:.78rem}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:4px solid var(--focus);outline-offset:4px}button{cursor:pointer}dialog{background:#090909;color:white;border:3px solid #fff;border-radius:18px;width:min(calc(100% - 28px),680px);max-height:calc(100% - 30px);overflow-y:auto;padding:25px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#171717;color:#fff;border:3px solid #fff;padding:13px 20px;font-weight:800;border-radius:10px;box-shadow:0 5px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:25px auto;background:#111;color:#fff;border:2px solid #fff;border-radius:14px;padding:24px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:min(100% - 24px,790px)}.top{padding:17px 0;flex-wrap:wrap}.brandmark{width:42px;height:42px;font-size:16px}.tabs{gap:6px;padding:15px 0 23px}.tab{min-height:63px;font-size:.85rem}.entry,.panel,.empty{padding:15px}.date-buttons button{min-width:110px}.top .tiny{padding:.35rem .4rem}.brand strong{font-size:.83rem}.brand span:not(.brandmark){font-size:.7rem}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+*{box-sizing:border-box}html{font-size:calc(22px * var(--scale));scroll-behavior:auto}body{margin:0;background:var(--bg);color:var(--text);font:500 1rem/1.65 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}button,input,textarea{font:inherit;color:var(--text)}input,textarea{background:#111;border:2px solid #fff;border-radius:12px;padding:.85rem;width:100%}input[type=date],input[type=datetime-local]{color-scheme:dark;min-height:62px}input[type=file]{font-size:.85rem}textarea{resize:vertical;min-height:188px;line-height:1.65}::placeholder{color:#d0d0d0;opacity:1}h1,h2,p{margin:0}h1{font-size:1.65rem;line-height:1.22;letter-spacing:-.025em;margin-bottom:.55rem}h2{font-size:1.2rem;line-height:1.3}p{margin-bottom:.5rem}.intro{margin-bottom:1.1rem}.shell{width:min(100% - 40px,790px);margin:0 auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:2px solid #fff;padding:22px 0}.brand{display:flex;align-items:center;gap:13px;min-width:0}.brandmark{display:grid;place-items:center;width:48px;height:48px;border:2px solid #fff;border-radius:12px;font-weight:800;font-size:19px;flex-shrink:0}.brand strong{display:block;font-size:1rem;line-height:1.2;letter-spacing:.02em}.brand span:not(.brandmark){display:block;font-size:.82rem}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:20px 0 25px}.tab{border:2px solid #fff;color:#fff;background:#101010;font-weight:800;padding:.8rem .25rem;border-radius:12px;line-height:1.2;min-height:67px}.tab.selected{background:#292929;color:#fff;border-width:4px;text-decoration:underline;text-underline-offset:5px}.tab:hover,.outline:hover{background:#333}.tab.selected:hover{background:#333}main{padding-bottom:2rem}.stack{display:grid;gap:.8rem}.primary,.outline{border:2px solid #fff;border-radius:12px;background:#131313;color:#fff;padding:.6rem 1rem;font-weight:850;min-height:62px;cursor:pointer;line-height:1.3}.primary{background:#303030;color:#fff;border-width:4px}.primary:hover{background:#444}.outline:hover{background:#333}.primary:disabled,.outline:disabled{opacity:.6;cursor:not-allowed}.full{width:100%}.tiny{font-size:.78rem;padding:.5rem .65rem;min-height:48px;flex-shrink:0}.when{border:2px solid #7d7d7d;padding:.65rem .8rem;border-radius:12px}.when summary{cursor:pointer;font-size:.91rem;font-weight:750}.when label{display:block;margin-top:.65rem}.when input{margin-top:.3rem}.soft,.help{font-size:.8rem}.help{line-height:1.5}.divider{height:2px;background:#747474;margin:1.55rem 0}.row{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap}.titlebar{margin-bottom:.75rem}.save-status{font-weight:800;min-height:1.8rem;margin-top:.5rem}.entries{display:grid;gap:12px;margin-top:.8rem}.entry,.panel,.empty{background:var(--panel);border:2px solid #aaa;border-radius:14px;padding:17px 20px;overflow-wrap:anywhere}.entry{border-color:#fff}.entry p{white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 .7rem}.entry .whenline{font-weight:800;font-size:.82rem;margin-bottom:.55rem}.entry .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.7rem}.entry .actions button{min-height:45px;padding:.35rem .7rem;font-size:.85rem}.empty{line-height:1.5}.controls-date{border:2px solid #aaa;border-radius:14px;padding:17px;margin:15px 0 20px;display:grid;gap:14px}.date-buttons{display:flex;flex-wrap:wrap;gap:9px}.date-buttons button{flex:1}.controls-date label,label{font-weight:750;display:block}#chosenDateHeading{margin:1.2rem 0 .65rem}.info{padding:10px 0}#searchInput{margin-top:10px}.sizes{display:flex;gap:9px;flex-wrap:wrap}.sizes button{flex:1;min-width:150px}.sizes button[aria-pressed=true]{background:#303030;color:#fff;border-width:4px;text-decoration:underline}.panel{margin-bottom:16px}footer{border-top:1px solid #666;padding:16px 0 26px;font-size:.78rem}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:4px solid var(--focus);outline-offset:4px}button{cursor:pointer}dialog{background:#090909;color:white;border:3px solid #fff;border-radius:18px;width:min(calc(100% - 28px),680px);max-height:calc(100% - 30px);overflow-y:auto;padding:25px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#171717;color:#fff;border:3px solid #fff;padding:13px 20px;font-weight:800;border-radius:10px;box-shadow:0 5px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:25px auto;background:#111;color:#fff;border:2px solid #fff;border-radius:14px;padding:24px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:min(100% - 24px,790px)}.top{padding:17px 0;flex-wrap:wrap}.brandmark{width:42px;height:42px;font-size:16px}.tabs{gap:6px;padding:15px 0 23px}.tab{min-height:63px;font-size:.85rem}.entry,.panel,.empty{padding:15px}.date-buttons button{min-width:110px}.top .tiny{padding:.35rem .4rem}.brand strong{font-size:.83rem}.brand span:not(.brandmark){font-size:.7rem}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
 .device-note{font-size:.82rem;line-height:1.4;border-left:4px solid white;padding-left:12px;margin-top:.55rem;color:#fff}body{padding-bottom:env(safe-area-inset-bottom)}textarea{font-size:1rem}input,button,textarea{touch-action:manipulation} .top button{flex-shrink:0} @media(max-width:360px){.brand span:not(.brandmark){display:none}.tab{padding:.65rem .15rem;overflow-wrap:anywhere}}
 
@@ -51,7 +51,7 @@ mark{background:#fff;color:#000;font-weight:900;padding:0 .03em}#page-find .when
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.9.2: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.10.0: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -161,21 +161,21 @@ async function update(modifier){
 function sortItems(items){return [...items].sort((a,b)=>Date.parse(b.occurredAt)-Date.parse(a.occurredAt)||Date.parse(b.createdAt)-Date.parse(a.createdAt))}
 function visibleItems(){return sortItems(state.items.filter(item=>!item.deletedAt))}
 function empty(container,message){const p=document.createElement('div');p.className='empty';p.textContent=message;container.replaceChildren(p)}
-function makeEntry(item,terms=[]){
+function makeEntry(item,terms=[],whole=false){
  const root=document.createElement('article');root.className='entry';root.dataset.id=item.id;
  const time=document.createElement('div');time.className='whenline';time.textContent=`${formatDate(item.occurredAt)} · ${formatTime(item.occurredAt)}`;
- const text=document.createElement('p');highlightText(text,item.text,terms);
+ const text=document.createElement('p');highlightText(text,item.text,terms,whole);
  const controls=document.createElement('div');controls.className='actions';
  for(const [name,action] of [[item.pinned?'Unpin':'Pin','pin'],[item.followUp?'Clear follow-up':'Follow up','followup'],['Read','read'],['Edit','edit'],['Delete','delete']]){const b=document.createElement('button');b.type='button';b.className='outline';b.textContent=name;b.dataset.action=action;b.dataset.id=item.id;if(action==='pin'||action==='followup')b.setAttribute('aria-pressed',String(action==='pin'?item.pinned:item.followUp));controls.append(b)}
- if(item.pinned){const pin=document.createElement('p');pin.className='pin-label';pin.textContent='Pinned · important';root.append(pin)}if(item.followUp){const flag=document.createElement('p');flag.className='pin-label';flag.textContent='Follow-up flagged';root.append(flag)}root.append(time,text,controls);return root;
+ if(item.pinned){const pin=document.createElement('p');pin.className='pin-label';pin.textContent='Pinned · important';root.append(pin)}if(item.followUp){const flag=document.createElement('p');flag.className='pin-label';flag.textContent='Follow-up flagged';root.append(flag)}root.append(time,controls,text);return root;
 }
-function renderEntries(container,items,message,groupByDay=false,terms=[]){
+function renderEntries(container,items,message,groupByDay=false,terms=[],whole=false){
  container.replaceChildren();if(!items.length){empty(container,message);return}
  let lastDay='';
  for(const item of items.slice(0,250)){
   const date=dayKey(item.occurredAt);
   if(groupByDay&&date!==lastDay){const h=document.createElement('h3');h.className='day-heading';h.textContent=formatDate(item.occurredAt);container.append(h);lastDay=date}
-  container.append(makeEntry(item,terms));
+  container.append(makeEntry(item,terms,whole));
  }
  if(items.length>250){const msg=document.createElement('p');msg.textContent='Showing 250 memories. Choose a date or use Find to narrow the list.';container.append(msg)}
 }
@@ -185,6 +185,14 @@ function render(){
  const items=visibleItems(),today=dayKey(nowISO());
  renderEntries($('todayList'),items.filter(item=>dayKey(item.occurredAt)===today).slice(0,8),'Nothing recorded today yet.');
  if(dayMode==='today')$('dayPicker').value=today;
+ const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);const yesterdayKey=dayKey(yesterday);
+ for(const [id,label,count] of [['showToday','Today',items.filter(x=>dayKey(x.occurredAt)===today).length],['showYesterday','Yesterday',items.filter(x=>dayKey(x.occurredAt)===yesterdayKey).length],['showWeek','Last 7 days',weekMemories(items).length]])$(id).textContent=`${label} (${count})`;
+ const recent=[...items].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt)||Date.parse(b.updatedAt)-Date.parse(a.updatedAt))[0];
+ $('recentMemory').hidden=!recent;
+ if(recent){$('recentMemoryText').textContent=recent.text.length>180?recent.text.slice(0,180)+'…':recent.text;$('recentMemoryTime').textContent=`Event: ${formatDate(recent.occurredAt)} at ${formatTime(recent.occurredAt)}. Recorded: ${formatDate(recent.createdAt)} at ${formatTime(recent.createdAt)}.`;$('editRecent').dataset.id=recent.id}
+ const latest=state.items.reduce((last,x)=>Date.parse(x.updatedAt)>Date.parse(last||'1970-01-01')?x.updatedAt:last,null);
+ const savedMessage=latest?`Last memory saved or edited: ${formatDate(latest)} at ${formatTime(latest)}.`:'No saved memories yet.';
+ $('lastMemorySave').textContent=savedMessage;$('lastMemorySaveSettings').textContent=savedMessage;
  const current=$('dayPicker').value||today;
  const all=dayMode==='all'||dayMode==='week',week=dayMode==='week';
  $('chosenDateHeading').textContent=week?'Last seven days':all?'All my memories':formatDate(new Date(current+'T12:00:00').toISOString());
@@ -193,9 +201,9 @@ function render(){
  const reviewed=weekMemories(items),bounds=sevenDayBounds();
  $('dayModeStatus').textContent=week?`${bounds.from} to ${bounds.to}: ${reviewed.length} saved memories across ${new Set(reviewed.map(x=>dayKey(x.occurredAt))).size} of seven days. Days without entries have no recorded information.`:all?'Most recent first. Showing every recorded day.':'Memories from the chosen date.';
  const query=$('searchInput').value.trim(),from=$('searchFrom').value,to=$('searchTo').value,active=Boolean(query||from||to),invalid=Boolean(from&&to&&from>to);
- const found=active&&!invalid?searchMemories(items,query,from,to):[];
+ const found=active&&!invalid?searchMemories(items,query,from,to,$('wholeNames').checked):[];
  $('findCount').textContent=invalid?'Choose a From date on or before the To date.':active?`${found.length} matching ${found.length===1?'memory':'memories'}.`:'Type a name or phrase, or choose a date range.';
- renderEntries($('searchList'),found,invalid?'The date range needs correcting.':active?'No memories match this search.':'Search for something you remember.',false,searchTerms(query));
+ renderEntries($('searchList'),found,invalid?'The date range needs correcting.':active?'No memories match this search.':'Search for something you remember.',false,searchTerms(query),$('wholeNames').checked);
  $('storageDescription').textContent=mode==='windows'?'Your memories stay on this device.':'Memories stay in storage on this iPhone or browser. Removing the app, clearing its data, or device failure can erase them. Download backups regularly. There is no online sync.';
  renderDeleted();renderAssistant();renderRecap(items,all);renderVisionPreferences();renderBackupStatus();renderEditRecovery();
 }
@@ -283,7 +291,7 @@ function wire(){
   $('saveBtn').disabled=true;status('Saving…');
   const ok=await update(next=>next.items.push({id:uuid(),text:txt,occurredAt,createdAt:stamp,updatedAt:stamp,deletedAt:null}));
   $('saveBtn').disabled=false;
-  if(ok){if($('memoryText').value===raw&&$('occurredAt').value===supplied){$('memoryText').value='';clearDraft();$('occurredAt').value='';$('whenDetails').open=false}else{saveDraft()}toast('Memory saved.');$('memoryText').focus()}
+  if(ok){if($('memoryText').value===raw&&$('occurredAt').value===supplied){$('memoryText').value='';clearDraft();$('occurredAt').value='';$('whenDetails').open=false}else{saveDraft()}status(`Memory saved on this device at ${formatTime(stamp)}.`);toast('Memory saved.');if(!$('memoryText').value)$('memoryText').blur()}
  });
  document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
  $('settingsOpen').addEventListener('click',()=>navigate('settings'));
@@ -294,6 +302,7 @@ function wire(){
  $('showAll').addEventListener('click',()=>{dayMode='all';render()});
  $('dayPicker').addEventListener('change',()=>{dayMode='date';render()});
  $('searchInput').addEventListener('input',render);
+ $('wholeNames').addEventListener('change',render);
  document.addEventListener('click',onAction);
  $('cancelEdit').addEventListener('click',cancelEdit);
  $('editForm').addEventListener('submit',async e=>{
@@ -431,15 +440,18 @@ function wireVision() {
 
 // Local search: every unquoted word must match; quoted phrases stay together.
 function searchTerms(query){return [...query.matchAll(/["“]([^"”]+)["”]|(\S+)/g)].map(m=>(m[1]||m[2]).toLocaleLowerCase()).filter(Boolean)}
-function searchMemories(items,query,from='',to=''){
- const terms=searchTerms(query);
- return items.filter(item=>{const date=dayKey(item.occurredAt),text=item.text.toLocaleLowerCase();return(!from||date>=from)&&(!to||date<=to)&&terms.every(term=>text.includes(term))});
-}
-function highlightText(container,text,terms){
- if(!terms.length){container.textContent=text;return}
+function termPattern(terms,whole=false){
  const escaped=[...new Set(terms)].sort((a,b)=>b.length-a.length).map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
- const pattern=new RegExp(escaped.join('|'),'gi');let last=0;
- for(const match of text.matchAll(pattern)){container.append(document.createTextNode(text.slice(last,match.index)));const mark=document.createElement('mark');mark.textContent=match[0];container.append(mark);last=match.index+match[0].length}
+ return new RegExp((whole?'(^|[^\\p{L}\\p{N}_])':'()')+'('+escaped.join('|')+')'+(whole?'(?=$|[^\\p{L}\\p{N}_])':''),'giu');
+}
+function searchMemories(items,query,from='',to='',whole=false){
+ const terms=searchTerms(query);
+ return items.filter(item=>{const date=dayKey(item.occurredAt),text=item.text.toLocaleLowerCase();return(!from||date>=from)&&(!to||date<=to)&&terms.every(term=>whole?termPattern([term],true).test(text):text.includes(term))});
+}
+function highlightText(container,text,terms,whole=false){
+ if(!terms.length){container.textContent=text;return}
+ const pattern=termPattern(terms,whole);let last=0;
+ for(const match of text.matchAll(pattern)){const at=match.index+match[1].length;container.append(document.createTextNode(text.slice(last,at)));const mark=document.createElement('mark');mark.textContent=match[2];container.append(mark);last=at+match[2].length}
  container.append(document.createTextNode(text.slice(last)));
 }
 function sevenDayBounds(now=new Date()){
@@ -521,7 +533,7 @@ function wireProtection(){
  $('recoverEdit').addEventListener('click',recoverEdit);
  $('applyUpdate').addEventListener('click',applyAppUpdate);
  for(const id of ['searchFrom','searchTo'])$(id).addEventListener('change',render);
- $('clearSearch').addEventListener('click',()=>{$('searchInput').value='';$('searchFrom').value='';$('searchTo').value='';render()});
+ $('clearSearch').addEventListener('click',()=>{$('searchInput').value='';$('searchFrom').value='';$('searchTo').value='';$('wholeNames').checked=false;render()});
  $('showWeek').addEventListener('click',()=>{dayMode='week';render()});
  const keepDrafts=()=>{if($('memoryText').value.trim())saveDraft();saveEditDraft()};
  window.addEventListener('pagehide',keepDrafts);
@@ -556,16 +568,18 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <p class="intro">Write what happened or what someone said. Any words are fine.</p>
         <form id="addForm" class="stack">
           <label class="sr" for="memoryText">Your memory</label>
-          <textarea id="memoryText" maxlength="12000" rows="5" placeholder="What would you like to remember?" required autocomplete="off"></textarea>
+          <textarea id="memoryText" maxlength="12000" rows="3" placeholder="What would you like to remember?" required autocomplete="off"></textarea>
+          <button class="primary full" id="saveBtn" type="submit">SAVE MEMORY</button>
+        <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready to save.</div>
           <details class="when" id="whenDetails">
             <summary>Change when it happened <span class="soft">(optional)</span></summary>
             <label for="occurredAt">Date and time of the event</label>
             <input id="occurredAt" type="datetime-local">
             <p class="help">Leave unchanged to use the current date and time.</p>
           </details>
-          <button class="primary full" id="saveBtn" type="submit">SAVE MEMORY</button>
         </form>
-        <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready to save.</div>
+        <p id="lastMemorySave" class="help"></p>
+        <section id="recentMemory" class="panel" aria-labelledby="recentHeading" hidden><div class="row titlebar"><h2 id="recentHeading">Last recorded memory</h2><button id="editRecent" class="outline tiny" data-action="edit" type="button">Edit last memory</button></div><p id="recentMemoryTime" class="help"></p><p id="recentMemoryText"></p></section>
         <p class="device-note">Memories stay on this iPhone. Keep a backup in Files. Choosing iCloud Drive uploads that backup to your Apple account.</p>
         <button class="outline full" id="quickBackup" type="button">BACK UP MEMORIES</button><p id="backupSummary" class="help"></p>
         <div class="divider"></div>
@@ -588,6 +602,8 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <h1 id="heading-find">Find a memory</h1>
         <label for="searchInput">Search by name, word or topic</label>
         <input id="searchInput" type="search" maxlength="1000" placeholder="Start typing to search" autocomplete="off">
+        <label class="check-row"><input id="wholeNames" type="checkbox"> Match whole names or words</label>
+        <p class="help">Type a person’s name to find entries mentioning it. Whole-name matching avoids Ann matching Joanna; it does not identify people or link nicknames.</p>
         <details class="when"><summary>Date range (optional)</summary><label for="searchFrom">From date</label><input id="searchFrom" type="date"><label for="searchTo">To date</label><input id="searchTo" type="date"></details>
         <p class="help">Use names or several words. Put an exact phrase in double quotes, such as “call tomorrow”. Every word or quoted phrase must match.</p><button class="outline" id="clearSearch" type="button">Clear search</button>
         <p id="findCount" class="info" role="status" aria-live="polite"></p>
@@ -637,7 +653,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack">
           <h2>Back up your memories</h2>
           <p>Download a file containing your memories. Keep a copy in a safe place. It is <strong>not encrypted</strong>.</p>
-          <button class="outline full" type="button" id="exportBtn">DOWNLOAD BACKUP</button><p id="backupSettingsStatus" class="help"></p><p class="help">Exports contain saved memories and settings. Unsaved drafts are kept separately on this device.</p>
+          <button class="outline full" type="button" id="exportBtn">DOWNLOAD BACKUP</button><p id="backupSettingsStatus" class="help"></p><p id="lastMemorySaveSettings" class="help"></p><p class="help">Exports contain saved memories and settings. Unsaved drafts are kept separately on this device.</p>
           <label for="importFile">Restore or transfer a backup</label>
           <input type="file" id="importFile" accept="application/json,.json">
           <p class="help">Import keeps existing memories and adds new ones. Your original memories remain on this iPhone. You can import previous backups without replacing everything.</p>
@@ -647,7 +663,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.9.2 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Your private daily memory diary</footer>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-L2EhjIkBdxiITVNPiC5R8rjkFPRuAIPN80lP/OHm2/w='; style-src 'sha256-lvJQnOW9+CF8nvNjg31+2f9uHrFNoKBfF5c8jDqhL0Y='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-VdBXQyezRWQlfTbW1kF70vmA67iYx4RHGiqqZgcFODE='; style-src 'sha256-HQUIoRXFw+GSBY2JCD/HYJaQRi3zUOXmvq/cHD847xo='; img-src data:; connect-src 'self' https://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -35,10 +35,11 @@ mark{background:#fff;color:#000;font-weight:700;padding:0 .03em}#editRecoveryTex
 @media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:calc(100% - 32px)}.top{padding:16px 0 12px}.brand strong{font-size:.9rem}.brand span:not(.brandmark){font-size:.75rem}.top .tiny{padding:.4rem .5rem}.tabs{gap:4px}.tab{padding:.4rem .35rem}.memory-tabs{padding-top:0}dialog{padding:16px}}
 @media(max-width:360px){.top{gap:8px}.brand{gap:8px}.brandmark{width:32px;height:32px}.brand strong{font-size:.85rem}.brand span:not(.brandmark){font-size:.7rem}.date-buttons{grid-template-columns:1fr}.sizes button{flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+select{font:inherit;color:#fff;background:#101010;border:1px solid #737373;border-radius:9px;padding:.6rem;width:100%;max-width:100%;min-height:48px}.ai-text{white-space:pre-wrap;overflow-wrap:anywhere}#aiConversation{margin:1rem 0}#page-ai .titlebar,#aiStatus{margin-top:.8rem}#aiMemoryResults .panel{display:block}
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.10.2: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.11.0: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -203,18 +204,18 @@ function renderDeleted(){
 }
 let settingsReturn='write';
 function navigate(name){
- if(!['write','days','find','settings','vision','assistant'].includes(name))return;
+ if(!['write','days','find','settings','vision','assistant','ai'].includes(name))return;
  if(name==='settings')settingsReturn=page;
  if(page==='vision'&&name!=='vision')stopSpeaking();
  page=name;
  document.querySelectorAll('.page').forEach(el=>el.hidden=el.id!=='page-'+name);
  const memory=['write','days','find'].includes(name);$('memoryNav').hidden=!memory;
  document.querySelectorAll('.tab').forEach(button=>{
-  const selected=button.dataset.hub?(button.dataset.hub===(memory?'memory':name)):button.dataset.page===name;
+  const selected=button.dataset.hub?(button.dataset.hub===(memory?'memory':name==='ai'?'assistant':name)):button.dataset.page===name;
   button.classList.toggle('selected',selected);selected?button.setAttribute('aria-current','page'):button.removeAttribute('aria-current');
  });
  if(name==='days'&&!$('dayPicker').value)$('dayPicker').value=dayKey(nowISO());
- render();window.scrollTo(0,0);
+ render();window.scrollTo(0,0);if(name==='ai')initAI();
 }
 function saveFile(name,content){const blob=new Blob([content],{type:'application/json'}),link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 async function backup(){
@@ -305,7 +306,7 @@ function wire(){
  $('importFile').addEventListener('change',async e=>{await restoreBackup(e.target.files[0]);e.target.value='' });
  window.addEventListener('storage',e=>{if(e.key==='everyday-hq-refresh')toast('This diary was changed in another tab. Reopen it before editing.')});
 }
-async function start(){try{if(location.protocol==='file:')throw new Error('Open the secure website in Safari rather than opening this HTML file in Files.');$('layoutTestNotice').hidden=!LAYOUT_TEST;wire();wireVision();wireProtection();await initStorage();$('boot').hidden=true;$('app').hidden=false;render();status('Ready to save.');loadDraft();initOffline();}
+async function start(){try{if(location.protocol==='file:')throw new Error('Open the secure website in Safari rather than opening this HTML file in Files.');$('layoutTestNotice').hidden=!LAYOUT_TEST;wire();wireVision();wireProtection();wireAI();await initStorage();$('boot').hidden=true;$('app').hidden=false;render();status('Ready to save.');loadDraft();initOffline();}
  catch(err){$('app').hidden=true;$('boot').hidden=true;$('fatal').hidden=false;$('fatalDetail').textContent=err.message||'Unknown storage error';console.error(err)}}
 // Memory views: only saved text is used; no inferred dates or generated stories.
 function possibleCommitment(text) {
@@ -502,6 +503,7 @@ async function refreshOfflineStatus(){
  }catch(_){offlineMessage('Offline readiness could not be verified. Reopen online before relying on offline access.')}
 }
 function preserveBeforeUpdate(){
+ if(aiBusy){toast('Finish or stop the AI reply before updating.');return false}if(aiInitialised&&!aiDraft())return false;
  if(busy){toast('Wait for the current save to finish, then update.');return false}
  if($('memoryText').value.trim()&&!saveDraft())return false;
  if(!saveEditDraft())return false;
@@ -541,6 +543,80 @@ function wireProtection(){
  const keepDrafts=()=>{if($('memoryText').value.trim())saveDraft();saveEditDraft()};
  window.addEventListener('pagehide',keepDrafts);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)keepDrafts();else{render();renderBackupStatus();appRegistration?.update().catch(()=>{});offerUpdate()}});
+}
+
+// Optional AI: isolated chat database; no network until Connect or Send is pressed.
+const AI_PREFIX=LAYOUT_TEST?'everydayHQ.test.ai.':'everydayHQ.ai.';
+let aiDB,aiDoc={revision:0,threads:[],current:''},aiInitialised=false,aiInitialising,aiWrites=Promise.resolve(),aiBusy=false,aiAbort,aiSelected=[];
+function aiNote(message){$('aiStatus').textContent=message}
+function aiDraft(){try{localStorage.setItem(AI_PREFIX+'draft.'+aiDoc.current,$('aiMessage').value);return true}catch(_){aiNote('Chat draft could not be kept. Keep a copy before leaving.');return false}}
+function aiConnection(){
+ const url=new URL($('aiEndpoint').value.trim());if(url.protocol!=='https:'||!url.hostname.endsWith('.workers.dev')||url.port||url.username||url.password||url.search||url.hash||!['/',''].includes(url.pathname))throw Error('Use your personal https://…workers.dev address, with no path.');
+ const token=$('aiAccessCode').value.trim();if(token.length<32)throw Error('Enter your personal service access code. Never enter a Cloudflare API token here.');return{endpoint:url.origin,token};
+}
+async function aiRequest(path,payload,signal){
+ const c=aiConnection(),r=await fetch(c.endpoint+path,{method:payload?'POST':'GET',headers:{'Authorization':'Bearer '+c.token,...(payload?{'Content-Type':'application/json'}:{})},...(payload?{body:JSON.stringify(payload)}:{}),credentials:'omit',cache:'no-store',signal});
+ let body;try{body=await r.json()}catch(_){throw Error('The AI service returned an unreadable response. Retry later.')}
+ if(!r.ok)throw Error(body.error||'The AI service could not answer. Retry later.');return body;
+}
+async function initAI(){
+ if(aiInitialised)return;if(aiInitialising)return aiInitialising;
+ aiInitialising=(async()=>{try{
+  aiDB=await new Promise((resolve,reject)=>{const r=indexedDB.open(LAYOUT_TEST?'EverydayHQ_AI_test_v1':'EverydayHQ_AI_v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('chats');r.onsuccess=()=>{r.result.onversionchange=()=>r.result.close();resolve(r.result)};r.onerror=()=>reject(r.error);r.onblocked=()=>reject(Error('Close other chat tabs and reopen.'))});
+  const saved=await transactAI('readonly',store=>store.get('state'));if(saved){if(!Array.isArray(saved.threads)||!Number.isInteger(saved.revision)||saved.threads.some(t=>typeof t.id!=='string'||!Array.isArray(t.messages)||t.messages.some(m=>!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>20000)))throw Error('Chat storage could not be read safely. Nothing was reset.');aiDoc=saved}
+  try{const c=JSON.parse(localStorage.getItem(AI_PREFIX+'connection')||'null');if(c){$('aiEndpoint').value=c.endpoint||'';$('aiAccessCode').value=c.token||''}}catch(_){}
+  aiInitialised=true;renderAI();aiNote('Not connected. Connect your free personal AI service before sending.');
+ }catch(e){aiNote(e.message||'Chat storage unavailable. Your diary has not changed.')}})();return aiInitialising;
+}
+function transactAI(mode,fn){return new Promise((resolve,reject)=>{const tx=aiDB.transaction('chats',mode);let result;try{result=fn(tx.objectStore('chats'),tx)}catch(e){tx.abort();reject(e);return}tx.oncomplete=()=>resolve(result?.result);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||Error('Chat changed in another window. Reopen before editing.'))})}
+function writeAI(change){
+ const task=aiWrites.catch(()=>{}).then(async()=>{if(!aiInitialised)throw Error('Chat storage is not ready.');const expected=aiDoc.revision,next=structuredClone(aiDoc);change(next);next.revision=expected+1;
+  await transactAI('readwrite',(store,tx)=>{const request=store.get('state');request.onsuccess=()=>{if((request.result?.revision||0)!==expected){tx.abort();return}store.put(next,'state')}});aiDoc=next;renderAI();return true;
+ });aiWrites=task;return task;
+}
+function renderAI(){
+ const thread=aiDoc.threads.find(t=>t.id===aiDoc.current);$('aiChatSelect').replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='Choose a chat';$('aiChatSelect').append(blank);
+ for(const t of aiDoc.threads){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('aiChatSelect').append(o)}$('aiChatSelect').value=thread?.id||'';
+ $('aiConversation').replaceChildren();for(const m of thread?.messages||[]){const article=document.createElement('article');article.className='panel';const who=document.createElement('p');who.className='help';who.textContent=m.role==='user'?'You':'AI · Cloudflare';const content=document.createElement('p');content.className='ai-text';content.textContent=m.content;article.append(who,content);$('aiConversation').append(article)}
+ try{$('aiMessage').value=localStorage.getItem(AI_PREFIX+'draft.'+aiDoc.current)||''}catch(_){}
+ $('aiRetry').hidden=!thread?.pending;$('aiDeleteChat').disabled=!thread||aiBusy;$('aiNewChat').disabled=aiBusy;$('aiChatSelect').disabled=aiBusy;$('aiSend').disabled=aiBusy||!aiInitialised;$('aiRetry').disabled=aiBusy;$('aiMessage').disabled=aiBusy;$('aiStop').hidden=!aiBusy;
+}
+async function newAIChat(){if(aiBusy)return;if(!aiDraft())return;await writeAI(next=>{if(next.threads.length>=20)throw Error('Export or delete an old chat before creating another.');const t={id:uuid(),title:'New chat · '+formatDate(nowISO()),createdAt:nowISO(),messages:[],private:false,pending:false};next.threads.unshift(t);next.current=t.id});$('aiMessage').focus()}
+function aiContext(messages){let recent=messages.slice(-20).map(m=>({role:m.role,content:m.content}));const bytes=x=>new TextEncoder().encode(JSON.stringify(x)).length;while(recent.length>1&&bytes(recent)>10000)recent.shift();return recent}
+function aiMemorySearch(){
+ const query=$('aiMemoryQuery').value.trim();$('aiMemoryResults').replaceChildren();aiSelected=[];if(!query){$('aiMemoryCount').textContent='Enter a name or phrase. Nothing is sent by searching.';return}
+ const found=searchMemories(visibleItems(),query).slice(0,20);$('aiMemoryCount').textContent=`${found.length} local results shown. Choose up to three excerpts. Nothing is sent yet.`;
+ for(const item of found){const label=document.createElement('label');label.className='panel';const row=document.createElement('span');row.className='check-row';const checkbox=document.createElement('input');checkbox.type='checkbox';const date=document.createElement('span');date.textContent=formatDate(item.occurredAt)+' · '+formatTime(item.occurredAt);row.append(checkbox,date);const text=document.createElement('p');text.className='ai-text';const excerpt=item.text.slice(0,1500);text.textContent=excerpt+(item.text.length>1500?'\n[Excerpt: first 1,500 characters only]':'');label.append(row,text);checkbox.addEventListener('change',()=>{if(checkbox.checked){if(aiSelected.length===3){checkbox.checked=false;aiNote('Choose at most three memory excerpts.');return}aiSelected.push({id:item.id,date:item.occurredAt,text:excerpt})}else aiSelected=aiSelected.filter(x=>x.id!==item.id)});$('aiMemoryResults').append(label)}
+}
+async function sendAI(retry=false){
+ if(aiBusy)return;await initAI();if(!aiInitialised)return;
+ try{
+  aiConnection();const originalDraftID=aiDoc.current;let thread=aiDoc.threads.find(t=>t.id===aiDoc.current),raw=$('aiMessage').value,text=retry?thread?.messages.at(-1)?.content:raw.trim();if(!text||text.length>3000)throw Error('Write a question of up to 3,000 characters.');
+  const memories=aiSelected.map(({date,text})=>({date,text})),privateChat=Boolean(thread?.private||memories.length);
+  if(privateChat&&!confirm(`Send this question, recent chat context and ${memories.length} selected diary excerpt(s) to Cloudflare Workers AI? This chat may contain private diary information. Continue only if you approve sharing it.`)){aiNote('Nothing sent. Your diary stays on this device.');return}
+  aiBusy=true;renderAI();if(!thread){await writeAI(next=>{if(next.threads.length>=20)throw Error('Create space by exporting or deleting an old chat.');const t={id:uuid(),title:text.slice(0,60),createdAt:nowISO(),messages:[],private:false,pending:false};next.threads.unshift(t);next.current=t.id});thread=aiDoc.threads[0]}
+  const id=thread.id;
+  if(retry&&privateChat&&!thread.private)await writeAI(next=>{next.threads.find(t=>t.id===id).private=true});
+  if(!retry){await writeAI(next=>{const t=next.threads.find(x=>x.id===id);if(t.messages.length>=198)throw Error('This chat is full. Start a new one.');t.messages.push({role:'user',content:text,at:nowISO()});t.title=t.messages[0].content.slice(0,60);t.private=privateChat;t.pending=true});if($('aiMessage').value===raw){$('aiMessage').value='';aiDraft()}if(originalDraftID!==id){try{if(localStorage.getItem(AI_PREFIX+'draft.'+originalDraftID)===raw)localStorage.removeItem(AI_PREFIX+'draft.'+originalDraftID)}catch(_){}}}
+  const context=aiContext(aiDoc.threads.find(t=>t.id===id).messages);aiSelected=[];$('aiMemoryResults').replaceChildren();$('aiMemoryCount').textContent='No diary excerpts selected. Reselect excerpts if needed for a retry.';
+  aiAbort=new AbortController();const timeout=setTimeout(()=>aiAbort?.abort(),45000);aiNote('Waiting for Cloudflare…');let reply;
+  try{reply=await aiRequest('/chat',{messages:context,memories,memoryConsent:privateChat},aiAbort.signal);if(aiAbort.signal.aborted)throw Error('Stopped. The question is saved; retry when ready.')}finally{clearTimeout(timeout)}
+  if(reply.model!=='@cf/qwen/qwen3-30b-a3b-fp8'||typeof reply.text!=='string'||!reply.text.trim()||reply.text.length>20000)throw Error('The AI service returned an unexpected answer. Nothing was added as an AI reply.');
+  await writeAI(next=>{const t=next.threads.find(x=>x.id===id);t.messages.push({role:'assistant',content:reply.text,at:nowISO(),model:reply.model});t.pending=false});aiNote(`Reply saved locally. ${reply.used} of ${reply.dailyLimit} daily attempts used; resets ${reply.reset}. Sent ${context.length} recent messages. Earlier chat may be outside the context.`);
+ }catch(e){aiNote(e.name==='AbortError'?'Stopped or timed out. The question stays saved. Retry when ready; cancelled requests may count toward the limit.':e.name==='TypeError'?'Could not connect to the AI service. Check your connection and service settings, then retry.':e.message||'Could not reach the AI service. Retry later.')}
+ finally{aiBusy=false;aiAbort=null;renderAI()}
+}
+function wireAI(){
+ const safely=fn=>async()=>{try{await initAI();await fn()}catch(e){aiNote(e.message||'Chat action failed. Nothing was reset.')}};
+ $('aiNewChat').addEventListener('click',safely(newAIChat));$('aiMessage').addEventListener('input',aiDraft);
+ $('aiForm').addEventListener('submit',e=>{e.preventDefault();sendAI()});$('aiRetry').addEventListener('click',()=>sendAI(true));$('aiStop').addEventListener('click',()=>aiAbort?.abort());
+ $('aiChatSelect').addEventListener('change',safely(async()=>{if(aiBusy)return;const id=$('aiChatSelect').value;if(!aiDraft())return;await writeAI(next=>next.current=id)}));
+ $('aiDeleteChat').addEventListener('click',safely(async()=>{if(aiBusy||!aiDoc.current)return;if(!confirm('Delete this AI chat from this device? This cannot be undone. Diary entries are kept.'))return;const id=aiDoc.current;await writeAI(next=>{next.threads=next.threads.filter(t=>t.id!==id);next.current=next.threads[0]?.id||''});try{localStorage.removeItem(AI_PREFIX+'draft.'+id)}catch(_){}aiNote('Chat deleted on this device. This does not delete any provider records.')}));
+ $('aiConnect').addEventListener('click',safely(async()=>{const c=aiConnection(),r=await aiRequest('/status');if(r.model!=='@cf/qwen/qwen3-30b-a3b-fp8'||r.freeOnly!==true)throw Error('This is not the expected free-only service.');localStorage.setItem(AI_PREFIX+'connection',JSON.stringify(c));aiNote(`Connected: ${r.provider}, ${r.model}. ${r.used}/${r.dailyLimit} attempts today; resets ${r.reset}.`)}));
+ $('aiDisconnect').addEventListener('click',()=>{aiAbort?.abort();try{localStorage.removeItem(AI_PREFIX+'connection')}catch(_){}$('aiEndpoint').value='';$('aiAccessCode').value='';aiNote('Disconnected. Chats remain on this device.')});
+ $('aiMemorySearch').addEventListener('click',aiMemorySearch);
+ $('aiExportChats').addEventListener('click',safely(()=>{saveFile('EverydayHQ-AI-chats-'+dayKey(nowISO())+'.json',JSON.stringify({schema:'everydayHQ.ai.v1',exportedAt:nowISO(),threads:aiDoc.threads},null,2));aiNote('Chat export requested. Check Files; saving is not verified. Service access codes and unsaved drafts are excluded.')}));
+ window.addEventListener('pagehide',()=>{if(aiInitialised)aiDraft()});
 }
 
 // Inline scripts ignore defer. Wait until the body and error panel exist.
@@ -637,10 +713,27 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         </div>
       </section>
       <section class="page" id="page-assistant" aria-labelledby="heading-assistant" hidden>
-        <h1 id="heading-assistant">Everyday Assistant</h1>
+        <h1 id="heading-assistant">Everyday Assistant</h1><button class="primary full" id="openAIChat" type="button" data-page="ai">AI chat</button>
         <h2>Follow-ups</h2><p class="help">Only memories you flag yourself. Clear the flag when finished; the memory stays saved. No notifications.</p><div id="followupList" class="entries"></div><div class="divider"></div>
         <h2>Important memories</h2><p class="help">Memories you chose to pin. Deleted memories stay out of these lists.</p><div id="pinnedList" class="entries"></div>
         <div class="divider"></div><h2>Possible plans</h2><p class="help">Saved entries containing words such as “I need to”, “meeting” or “appointment”. These are your exact entries, not verified tasks or scheduled reminders. Negatives, quotes and completed plans can appear here. Pin anything important yourself.</p><div id="plansList" class="entries"></div>
+      </section>
+      <section class="page" id="page-ai" aria-labelledby="heading-ai" hidden>
+        <div class="row titlebar"><h1 id="heading-ai">AI Assistant</h1><button class="outline tiny" type="button" data-page="assistant">Back</button></div>
+        <p class="help">Cloudflare · Qwen3 30B A3B. Text conversation only. No live web, images or account access. AI can make mistakes.</p>
+        <details class="when"><summary>Connection &amp; privacy</summary><div class="stack">
+          <p class="help">Sending shares your question and recent chat with Cloudflare. Diary entries are shared only after you select excerpts and approve. Cloudflare states no training and normally no prompt/response retention for standard inference, with policy exceptions. Chats stay on this device and are separate from diary backups.</p>
+          <label for="aiEndpoint">Your personal AI service address</label><input id="aiEndpoint" type="url" placeholder="https://your-service.workers.dev" autocomplete="off">
+          <label for="aiAccessCode">Personal service access code</label><input id="aiAccessCode" type="password" autocomplete="off"><p class="help">This is a private code for your service, never your Cloudflare API token. It is kept on this device after connection.</p>
+          <div class="row"><button id="aiConnect" type="button" class="outline">Connect</button><button id="aiDisconnect" type="button" class="outline">Disconnect</button></div>
+          <p class="help">Free-plan service: at most 50 attempts a day and 5 a minute; Cloudflare’s shared 10,000-neuron daily allowance may stop it sooner. Responses are limited to 1,024 tokens. Failed or cancelled attempts can count. No paid fallback.</p>
+        </div></details>
+        <div class="row titlebar"><button id="aiNewChat" type="button" class="outline">New chat</button><button id="aiDeleteChat" type="button" class="outline">Delete chat</button></div>
+        <label for="aiChatSelect">Continue a saved chat</label><select id="aiChatSelect"><option value="">Choose a chat</option></select>
+        <div id="aiConversation" aria-label="Chat messages"></div>
+        <details class="when"><summary>Use diary memories (optional)</summary><p class="help">Search stays local. Choose up to three excerpts, review them below, then approve sharing when you send. Chats containing diary information ask again before each request.</p><label for="aiMemoryQuery">Name, word or phrase</label><input id="aiMemoryQuery" type="search" maxlength="1000"><button id="aiMemorySearch" type="button" class="outline">Search memories</button><p id="aiMemoryCount" class="help"></p><div id="aiMemoryResults"></div></details>
+        <form id="aiForm" class="stack"><label for="aiMessage">Your message</label><textarea id="aiMessage" rows="3" maxlength="3000" placeholder="Ask a question" autocomplete="off"></textarea><button id="aiSend" type="submit" class="primary full">Send</button></form>
+        <p id="aiStatus" role="status" aria-live="polite" class="help">Not connected.</p><div class="row"><button id="aiRetry" type="button" class="outline" hidden>Retry last question</button><button id="aiStop" type="button" class="outline" hidden>Stop</button><button id="aiExportChats" type="button" class="outline">Export chats</button></div>
       </section>
       <section class="page" id="page-settings" aria-labelledby="heading-settings" hidden>
         <div class="row titlebar"><h1 id="heading-settings">Settings</h1><button class="outline tiny" id="settingsClose" type="button">Back</button></div>
@@ -666,7 +759,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.2 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.11.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Earle’s Bureau</footer>

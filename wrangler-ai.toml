@@ -1,0 +1,22 @@
+name = "everyday-hq-ai"
+main = "ai-gateway.mjs"
+compatibility_date = "2026-10-24"
+workers_dev = true
+
+[ai]
+binding = "AI"
+
+[vars]
+# Fail closed. Set true ONLY after verifying Workers Free with no billing upgrade.
+FREE_ONLY_CONFIRMED = "false"
+
+[[durable_objects.bindings]]
+name = "BUDGET"
+class_name = "AIBudget"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AIBudget"]
+
+[observability]
+enabled = false

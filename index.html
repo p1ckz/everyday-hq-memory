@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-ii51UKU/XUvnSh6a2Rv3uFYD9MgVwdDon5TZIU5Iq0w='; style-src 'sha256-lvJQnOW9+CF8nvNjg31+2f9uHrFNoKBfF5c8jDqhL0Y='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-L2EhjIkBdxiITVNPiC5R8rjkFPRuAIPN80lP/OHm2/w='; style-src 'sha256-lvJQnOW9+CF8nvNjg31+2f9uHrFNoKBfF5c8jDqhL0Y='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -38,7 +38,7 @@ mark{background:#fff;color:#000;font-weight:700;padding:0 .03em}#editRecoveryTex
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.10.1: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.10.2: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -357,8 +357,18 @@ function renderReader() {
  $('focusPrevious').disabled=focusIndex===0;$('focusNext').disabled=focusIndex>=parts.length-1;
  applyReadingPreferences(p);
 }
+let pendingVision=null,savingVision=false,visionRetry;
+async function commitVisionPreferences(){
+ if(savingVision||!pendingVision)return;
+ if(busy){clearTimeout(visionRetry);visionRetry=setTimeout(commitVisionPreferences,25);return}
+ savingVision=true;const requested={...pendingVision};
+ const ok=await update(next=>{next.preferences.vision=requested});
+ if(!ok){pendingVision=null;renderVisionPreferences()}
+ else if(JSON.stringify(pendingVision)===JSON.stringify(requested))pendingVision=null;
+ savingVision=false;if(pendingVision)commitVisionPreferences();
+}
 function renderVisionPreferences() {
- const p=state.preferences.vision;
+ const p=pendingVision||state.preferences.vision;
  $('readerSize').value=p.font;$('readerLine').value=p.line;$('readerSpacing').value=p.spacing;$('readerFocus').checked=p.focus;
  renderReader();
 }
@@ -414,8 +424,8 @@ function wireVision() {
  $('openReader').addEventListener('click',openReader);
  $('readerBack').addEventListener('click',()=>{stopSpeaking();readingOpen=false;$('visionInputPanel').hidden=false;$('visionReaderPanel').hidden=true;$('visionText').focus()});
  for(const id of ['readerSize','readerLine','readerSpacing','readerFocus']){
-  $(id).addEventListener('input',()=>{stopSpeaking();renderReader()});
-  $(id).addEventListener('change',async()=>{const p=readingPreferences();const ok=await update(next=>{next.preferences.vision=p});if(!ok)renderVisionPreferences()});
+  $(id).addEventListener('input',()=>{pendingVision=readingPreferences();stopSpeaking();renderReader()});
+  $(id).addEventListener('change',()=>{pendingVision=readingPreferences();commitVisionPreferences()});
  }
  const move=direction=>{stopSpeaking();focusIndex+=direction;renderReader();$('readerText').focus()};
  $('focusPrevious').addEventListener('click',()=>move(-1));$('focusNext').addEventListener('click',()=>move(1));
@@ -656,7 +666,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.1 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.2 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Earle’s Bureau</footer>

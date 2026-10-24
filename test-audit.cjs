@@ -35,6 +35,13 @@ async function action(selector){const el=d.querySelector(selector);assert(el,sel
  await click('readerBack');input('visionText','SYNTHETIC reading sample. '.repeat(100));await click('openReader');assert(!$('visionReaderPanel').hidden);summary('#visionReaderPanel details summary');
  for(const [id,value]of [['readerSize','80'],['readerLine','2.4'],['readerSpacing','6']]){input(id,value);input(id,value,'change');await settle()}
  checked.add('readerFocus');$('readerFocus').checked=true;$('readerFocus').dispatchEvent(new w.Event('input'));$('readerFocus').dispatchEvent(new w.Event('change'));await settle();assert(!$('focusControls').hidden);await click('focusNext');assert($('focusPosition').textContent.includes('Part 2'));await click('focusPrevious');assert($('focusPosition').textContent.includes('Part 1'));
+ // Hold an actual save pending while later slider changes arrive.
+ const originalPersist=w.persist;let release;const gate=new Promise(resolve=>release=resolve);let held=true;
+ w.persist=async next=>{if(held){held=false;await gate}return originalPersist(next)};
+ input('readerSize','72');input('readerSize','72','change');assert(w.eval('busy'));
+ input('readerLine','2.0');input('readerLine','2.0','change');input('readerSpacing','2');input('readerSpacing','2','change');release();
+ await wait(()=>!w.eval('busy')&&!w.eval('savingVision')&&!w.eval('pendingVision'));w.persist=originalPersist;
+ assert.equal(state().preferences.vision.font,72);assert.equal(state().preferences.vision.line,2);assert.equal(state().preferences.vision.spacing,2);assert.equal($('readerText').style.lineHeight,'2');
  await click('speakBtn');assert(spoke.length);await click('pauseSpeech');assert.equal(paused,1);await click('pauseSpeech');assert.equal(resumed,1);await click('stopSpeech');assert.equal($('speechStatus').textContent,'Stopped.');await click('readerBack');
  d.querySelector('[data-hub=assistant]').click();assert.equal($('pinnedList').querySelectorAll('article').length,1);assert.equal($('followupList').querySelectorAll('article').length,1);assert.equal($('plansList').querySelectorAll('article').length,0); // edited text has no inferred commitment
  d.querySelector('[data-hub=memory]').click();await click('nav-find');input('searchInput','recoverable');assert($('findCount').textContent.startsWith('1 matching'));input('searchInput','"recoverable edit"');assert($('findCount').textContent.startsWith('1 matching'));

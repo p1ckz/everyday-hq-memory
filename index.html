@@ -4,54 +4,41 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-lD04HfZ5WhGFEziN0GhsWn16jNMHFKkFmh7Tc3aUR1Q='; style-src 'sha256-fZ7h82gAKPjVFDwsjFlmxJXkBMAwM5tUDHBDYZQ0HXo='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-ii51UKU/XUvnSh6a2Rv3uFYD9MgVwdDon5TZIU5Iq0w='; style-src 'sha256-lvJQnOW9+CF8nvNjg31+2f9uHrFNoKBfF5c8jDqhL0Y='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
   <meta name="description" content="A clear, simple diary for remembering your day.">
-  <style>:root{color-scheme:dark;--scale:1;--bg:#070707;--panel:#171717;--text:#fff;--border:#ededed;--focus:#ffde59}
-*{box-sizing:border-box}html{font-size:calc(22px * var(--scale));scroll-behavior:auto}body{margin:0;background:var(--bg);color:var(--text);font:500 1rem/1.65 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}button,input,textarea{font:inherit;color:var(--text)}input,textarea{background:#111;border:2px solid #fff;border-radius:12px;padding:.85rem;width:100%}input[type=date],input[type=datetime-local]{color-scheme:dark;min-height:62px}input[type=file]{font-size:.85rem}textarea{resize:vertical;min-height:188px;line-height:1.65}::placeholder{color:#d0d0d0;opacity:1}h1,h2,p{margin:0}h1{font-size:1.65rem;line-height:1.22;letter-spacing:-.025em;margin-bottom:.55rem}h2{font-size:1.2rem;line-height:1.3}p{margin-bottom:.5rem}.intro{margin-bottom:1.1rem}.shell{width:min(100% - 40px,790px);margin:0 auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:2px solid #fff;padding:22px 0}.brand{display:flex;align-items:center;gap:13px;min-width:0}.brandmark{display:grid;place-items:center;width:48px;height:48px;border:2px solid #fff;border-radius:12px;font-weight:800;font-size:19px;flex-shrink:0}.brand strong{display:block;font-size:1rem;line-height:1.2;letter-spacing:.02em}.brand span:not(.brandmark){display:block;font-size:.82rem}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:20px 0 25px}.tab{border:2px solid #fff;color:#fff;background:#101010;font-weight:800;padding:.8rem .25rem;border-radius:12px;line-height:1.2;min-height:67px}.tab.selected{background:#292929;color:#fff;border-width:4px;text-decoration:underline;text-underline-offset:5px}.tab:hover,.outline:hover{background:#333}.tab.selected:hover{background:#333}main{padding-bottom:2rem}.stack{display:grid;gap:.8rem}.primary,.outline{border:2px solid #fff;border-radius:12px;background:#131313;color:#fff;padding:.6rem 1rem;font-weight:850;min-height:62px;cursor:pointer;line-height:1.3}.primary{background:#303030;color:#fff;border-width:4px}.primary:hover{background:#444}.outline:hover{background:#333}.primary:disabled,.outline:disabled{opacity:.6;cursor:not-allowed}.full{width:100%}.tiny{font-size:.78rem;padding:.5rem .65rem;min-height:48px;flex-shrink:0}.when{border:2px solid #7d7d7d;padding:.65rem .8rem;border-radius:12px}.when summary{cursor:pointer;font-size:.91rem;font-weight:750}.when label{display:block;margin-top:.65rem}.when input{margin-top:.3rem}.soft,.help{font-size:.8rem}.help{line-height:1.5}.divider{height:2px;background:#747474;margin:1.55rem 0}.row{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap}.titlebar{margin-bottom:.75rem}.save-status{font-weight:800;min-height:1.8rem;margin-top:.5rem}.entries{display:grid;gap:12px;margin-top:.8rem}.entry,.panel,.empty{background:var(--panel);border:2px solid #aaa;border-radius:14px;padding:17px 20px;overflow-wrap:anywhere}.entry{border-color:#fff}.entry p{white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 .7rem}.entry .whenline{font-weight:800;font-size:.82rem;margin-bottom:.55rem}.entry .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.7rem}.entry .actions button{min-height:45px;padding:.35rem .7rem;font-size:.85rem}.empty{line-height:1.5}.controls-date{border:2px solid #aaa;border-radius:14px;padding:17px;margin:15px 0 20px;display:grid;gap:14px}.date-buttons{display:flex;flex-wrap:wrap;gap:9px}.date-buttons button{flex:1}.controls-date label,label{font-weight:750;display:block}#chosenDateHeading{margin:1.2rem 0 .65rem}.info{padding:10px 0}#searchInput{margin-top:10px}.sizes{display:flex;gap:9px;flex-wrap:wrap}.sizes button{flex:1;min-width:150px}.sizes button[aria-pressed=true]{background:#303030;color:#fff;border-width:4px;text-decoration:underline}.panel{margin-bottom:16px}footer{border-top:1px solid #666;padding:16px 0 26px;font-size:.78rem}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:4px solid var(--focus);outline-offset:4px}button{cursor:pointer}dialog{background:#090909;color:white;border:3px solid #fff;border-radius:18px;width:min(calc(100% - 28px),680px);max-height:calc(100% - 30px);overflow-y:auto;padding:25px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#171717;color:#fff;border:3px solid #fff;padding:13px 20px;font-weight:800;border-radius:10px;box-shadow:0 5px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:25px auto;background:#111;color:#fff;border:2px solid #fff;border-radius:14px;padding:24px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:min(100% - 24px,790px)}.top{padding:17px 0;flex-wrap:wrap}.brandmark{width:42px;height:42px;font-size:16px}.tabs{gap:6px;padding:15px 0 23px}.tab{min-height:63px;font-size:.85rem}.entry,.panel,.empty{padding:15px}.date-buttons button{min-width:110px}.top .tiny{padding:.35rem .4rem}.brand strong{font-size:.83rem}.brand span:not(.brandmark){font-size:.7rem}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
-
-.device-note{font-size:.82rem;line-height:1.4;border-left:4px solid white;padding-left:12px;margin-top:.55rem;color:#fff}body{padding-bottom:env(safe-area-inset-bottom)}textarea{font-size:1rem}input,button,textarea{touch-action:manipulation} .top button{flex-shrink:0} @media(max-width:360px){.brand span:not(.brandmark){display:none}.tab{padding:.65rem .15rem;overflow-wrap:anywhere}}
-
-/* v1.5 accessibility and full diary timeline */
-.day-heading{font-size:1.25rem;margin:1rem 0 .15rem;line-height:1.3;border-bottom:2px solid #fff;padding-bottom:.25rem}
-.date-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
-.date-buttons button{min-width:0;padding:.6rem .25rem}
-#dayModeStatus{margin-top:-.5rem}
-@media(max-width:390px){.date-buttons{grid-template-columns:1fr 1fr}.date-buttons button:last-child{grid-column:1/-1}}
-@media(max-width:600px){
- .tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- #nav-write{grid-column:1/-1}
- .tab{min-width:0;font-size:1rem;overflow-wrap:break-word;white-space:normal;padding:.65rem .45rem}
-}
-
-input,textarea,.stack,.controls-date,.sizes,.entry{min-width:0;max-width:100%}
-input[type=date],input[type=datetime-local]{display:block;width:100%;font-size:.8rem}
-input::-webkit-date-and-time-value{text-align:left;min-width:0}
-button,label,summary,h1,h2{overflow-wrap:anywhere}
-dialog{padding:18px}
-@media(max-width:430px){.date-buttons{grid-template-columns:1fr}.date-buttons button:last-child{grid-column:auto}.sizes button{min-width:0;flex-basis:100%}}
-
-/* HQ navigation and reading tools. No external fonts, scripts or services. */
-.hub-tabs{grid-template-columns:repeat(3,minmax(0,1fr));padding-bottom:12px}
-.hub-tabs .tab{font-size:.82rem;padding:.6rem .2rem}
-.memory-tabs{padding-top:0;border-bottom:1px solid #777;margin-bottom:1rem}
-.pin-label{font-weight:850;text-decoration:underline;font-size:.8rem}
-.recap-list{list-style:none;padding:0;display:grid;gap:12px}.recap-list button{text-align:left;font-size:.85rem}
-.reader{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;background:#000;color:#fff;padding:16px;border:2px solid #fff;border-radius:12px;min-height:200px}
-.reader-settings{margin-top:1rem}.reader-settings input[type=range]{padding:0;min-height:62px;accent-color:#fff}
-.check-row{display:flex;gap:14px;align-items:center;font-size:.9rem}.check-row input{width:36px;height:36px;flex-shrink:0;accent-color:#fff}
-.speech-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.entry .actions button{min-height:56px}
-@media(max-width:430px){.hub-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-tabs [data-hub=memory]{grid-column:1/-1}}
-@media(max-width:360px){.hub-tabs{grid-template-columns:1fr}.hub-tabs .tab{font-size:1rem}}
-
-mark{background:#fff;color:#000;font-weight:900;padding:0 .03em}#page-find .when{margin-top:16px}#editRecoveryText{white-space:pre-wrap;overflow-wrap:anywhere}
+  <style>:root{color-scheme:dark;--scale:1;--bg:#070707;--panel:#141414;--text:#fff;--border:#737373;--focus:#ffde59}
+*{box-sizing:border-box}
+html{font-size:calc(22px * var(--scale));scroll-behavior:auto;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button,input,textarea{font:inherit;color:inherit;touch-action:manipulation}
+button{cursor:pointer}input,textarea{display:block;background:#101010;border:1px solid var(--border);border-radius:9px;padding:.65rem .75rem;width:100%;min-width:0;max-width:100%}
+textarea{resize:vertical;min-height:188px;line-height:1.6;font-size:1rem}
+input[type=date],input[type=datetime-local]{color-scheme:dark;min-height:48px;font-size:.85rem}
+input::-webkit-date-and-time-value{text-align:left;min-width:0}input[type=file]{font-size:.85rem}
+::placeholder{color:#d0d0d0;opacity:1}h1,h2,h3,p{margin:0}h1,h2,h3{font-weight:650;line-height:1.3}h1{font-size:1.3rem;letter-spacing:-.018em;margin-bottom:.4rem}h2{font-size:1.08rem}h3{font-size:1rem}p{margin-bottom:.6rem}
+button,label,summary,h1,h2,h3{overflow-wrap:anywhere}label{font-weight:600;display:block}.intro{margin-bottom:1rem}
+.shell{width:min(calc(100% - 40px),760px);margin:0 auto;padding-top:env(safe-area-inset-top)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 16px;border-bottom:1px solid #434343;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brandmark{display:grid;place-items:center;width:36px;height:36px;border:1px solid #a0a0a0;border-radius:8px;flex-shrink:0}.brand strong{display:block;font-size:.95rem;font-weight:650;line-height:1.3;letter-spacing:-.01em}.brand span:not(.brandmark){display:block;font-size:.75rem;line-height:1.4}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0}.tab{flex:1 1 auto;min-width:max-content;min-height:48px;padding:.45rem .5rem;border:1px solid transparent;border-radius:8px;background:transparent;color:#fff;font-size:.86rem;font-weight:550;line-height:1.4}.tab.selected{background:#262626;border-color:#737373;font-weight:650;text-decoration:underline;text-underline-offset:.25em;text-decoration-thickness:2px}.tab:hover{background:#242424}.hub-tabs{padding-bottom:8px}.memory-tabs{border-bottom:1px solid #434343;padding-top:0;padding-bottom:12px;margin-bottom:1.1rem}.memory-tabs .tab{background:transparent;border:0;border-radius:0}.memory-tabs .tab.selected{background:transparent}
+main{padding-bottom:1.5rem}.stack{display:grid;gap:.7rem;min-width:0}.row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}.titlebar{margin-bottom:.65rem}
+.primary,.outline{border:1px solid var(--border);border-radius:9px;background:#141414;color:#fff;padding:.5rem .75rem;font-weight:600;min-height:48px;line-height:1.4;max-width:100%}.primary{background:#303030;border-color:#fff;font-weight:650}.primary:hover{background:#404040}.outline:hover{background:#262626}.primary:disabled,.outline:disabled{opacity:.6;cursor:not-allowed}.full{width:100%}.tiny{font-size:.82rem;padding:.4rem .6rem;min-height:44px;flex-shrink:0}
+.when{border:0;border-top:1px solid #434343;border-bottom:1px solid #434343;padding:.55rem 0;border-radius:0;min-width:0}.when summary{cursor:pointer;font-size:.9rem;font-weight:550;min-height:44px;align-content:center;padding:.25rem 0}.when label{margin-top:.65rem}.when input{margin-top:.3rem}.soft,.help{font-size:.83rem}.help{line-height:1.5}.device-note{font-size:.83rem;line-height:1.5;margin-top:.8rem;margin-bottom:.75rem}.divider{height:1px;background:#434343;margin:1.25rem 0}.save-status{font-size:.9rem;font-weight:600;min-height:1.5rem;margin:0}
+.entries{display:grid;gap:0;margin-top:.6rem}.entry,.panel,.empty{overflow-wrap:anywhere;min-width:0;max-width:100%}.entry{border:0;border-bottom:1px solid #737373;padding:1rem 0;background:transparent}.entry:first-child{padding-top:.4rem}.entry p{white-space:pre-wrap;margin:0 0 .7rem}.entry .whenline{font-weight:600;font-size:.85rem;margin-bottom:.6rem}.entry .actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}.entry .actions button{min-height:44px;padding:.35rem .6rem;font-size:.85rem;font-weight:550}.entry .actions [aria-pressed=true]{background:#303030;border-color:#fff}.panel,.empty{background:var(--panel);border:0;border-radius:10px;padding:.8rem;margin-bottom:.8rem}.empty{line-height:1.5}
+.controls-date{padding:0;margin:.8rem 0 1rem;display:grid;gap:.6rem;min-width:0}.date-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.date-buttons button{min-width:0;padding:.5rem .35rem;font-size:.9rem}.controls-date label{font-weight:600}#chosenDateHeading{margin:1rem 0 .45rem}.day-heading{font-size:1.08rem;margin:1rem 0 .2rem;line-height:1.4;border-bottom:1px solid #434343;padding-bottom:.35rem}.info{padding:.6rem 0}#searchInput{margin:.5rem 0 .8rem}#page-find .when{margin-top:.8rem}.sizes{display:flex;gap:8px;flex-wrap:wrap;min-width:0}.sizes button{flex:1 1 140px;min-width:0}.sizes button[aria-pressed=true]{background:#303030;border-color:#fff;text-decoration:underline;text-underline-offset:.2em}.pin-label{font-weight:600;font-size:.85rem;text-decoration:underline}.recap-list{list-style:none;padding:0;display:grid;gap:10px}.recap-list button{text-align:left;font-size:.9rem}
+.reader{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;background:#000;color:#fff;padding:.75rem;border:1px solid #737373;border-radius:9px;min-height:200px}.reader-settings{margin-top:.8rem}.reader-settings input[type=range]{padding:0;min-height:48px;accent-color:#fff}.check-row{display:flex;gap:12px;align-items:center;font-size:.9rem;min-height:44px;margin:.6rem 0}.check-row input{width:32px;height:32px;flex-shrink:0;accent-color:#fff}.date-filter{margin:.8rem 0}.date-filter #dateFields{padding:.75rem 0}.date-filter #toggleDates::after{content:" +"}.date-filter #toggleDates[aria-expanded=true]::after{content:" −"}.speech-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+footer{border-top:1px solid #434343;padding:16px 0 24px;font-size:.78rem}dialog{background:#090909;color:#fff;border:1px solid #a0a0a0;border-radius:12px;width:min(calc(100% - 24px),680px);max-height:calc(100% - 24px);overflow-y:auto;padding:20px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{pointer-events:none;position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#222;color:#fff;border:1px solid #a0a0a0;padding:.5rem .75rem;font-size:.9rem;font-weight:600;border-radius:9px;box-shadow:0 4px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:24px auto;background:#111;color:#fff;border:1px solid #a0a0a0;border-radius:10px;padding:24px}
+mark{background:#fff;color:#000;font-weight:700;padding:0 .03em}#editRecoveryText{white-space:pre-wrap;overflow-wrap:anywhere}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:calc(100% - 32px)}.top{padding:16px 0 12px}.brand strong{font-size:.9rem}.brand span:not(.brandmark){font-size:.75rem}.top .tiny{padding:.4rem .5rem}.tabs{gap:4px}.tab{padding:.4rem .35rem}.memory-tabs{padding-top:0}dialog{padding:16px}}
+@media(max-width:360px){.top{gap:8px}.brand{gap:8px}.brandmark{width:32px;height:32px}.brand strong{font-size:.85rem}.brand span:not(.brandmark){font-size:.7rem}.date-buttons{grid-template-columns:1fr}.sizes button{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.10.0: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.10.1: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -203,6 +190,7 @@ function render(){
  const query=$('searchInput').value.trim(),from=$('searchFrom').value,to=$('searchTo').value,active=Boolean(query||from||to),invalid=Boolean(from&&to&&from>to);
  const found=active&&!invalid?searchMemories(items,query,from,to,$('wholeNames').checked):[];
  $('findCount').textContent=invalid?'Choose a From date on or before the To date.':active?`${found.length} matching ${found.length===1?'memory':'memories'}.`:'Type a name or phrase, or choose a date range.';
+ if(!invalid&&(from||to))$('findCount').textContent+=` Dates: ${from||'any start'} to ${to||'any end'}.`;
  renderEntries($('searchList'),found,invalid?'The date range needs correcting.':active?'No memories match this search.':'Search for something you remember.',false,searchTerms(query),$('wholeNames').checked);
  $('storageDescription').textContent=mode==='windows'?'Your memories stay on this device.':'Memories stay in storage on this iPhone or browser. Removing the app, clearing its data, or device failure can erase them. Download backups regularly. There is no online sync.';
  renderDeleted();renderAssistant();renderRecap(items,all);renderVisionPreferences();renderBackupStatus();renderEditRecovery();
@@ -527,6 +515,11 @@ async function initOffline(){
  }catch(_){offlineMessage('Offline setup could not finish. Keep using the app online and try reopening later.')}
 }
 function wireProtection(){
+ $('toggleDates').addEventListener('click',()=>{
+  const expanded=$('toggleDates').getAttribute('aria-expanded')!=='true';
+  $('toggleDates').setAttribute('aria-expanded',String(expanded));$('dateFields').hidden=!expanded;
+  $('toggleDates').textContent=expanded?'Hide date range':'Show date range';
+ });
  $('quickBackup').addEventListener('click',backup);
  $('editText').addEventListener('input',saveEditDraft);$('editOccurred').addEventListener('input',saveEditDraft);
  $('editDialog').addEventListener('cancel',event=>{event.preventDefault();cancelEdit()});
@@ -549,7 +542,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
   <div class="shell" id="app" hidden>
     <p class="panel help" id="layoutTestNotice" hidden>Layout test only — this uses separate test storage, not your live diary.</p>
     <header class="top">
-      <div class="brand"><span class="brandmark" role="img" aria-label="Earle’s Bureau"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30H29C38 30 38 20 29 20H24M24 10H29C37 10 37 20 29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>EVERYDAY HQ</strong><span>Earle’s Bureau</span></div></div>
+      <div class="brand"><span class="brandmark" role="img" aria-label="Earle’s Bureau"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30H29C38 30 38 20 29 20H24M24 10H29C37 10 37 20 29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>Everyday HQ</strong><span>Earle’s Bureau</span></div></div>
       <button class="outline tiny" id="settingsOpen" type="button" aria-label="Open settings and backups">Settings</button>
     </header>
     <nav class="tabs hub-tabs" aria-label="HQ sections">
@@ -564,15 +557,15 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
     </nav>
     <main id="main">
       <section class="page" id="page-write" aria-labelledby="heading-write">
-        <h1 id="heading-write">Remember something</h1>
-        <p class="intro">Write what happened or what someone said. Any words are fine.</p>
+        <h1 id="heading-write">New memory</h1>
+        <p class="intro">A conversation, a moment, anything to remember.</p>
         <form id="addForm" class="stack">
           <label class="sr" for="memoryText">Your memory</label>
           <textarea id="memoryText" maxlength="12000" rows="3" placeholder="What would you like to remember?" required autocomplete="off"></textarea>
-          <button class="primary full" id="saveBtn" type="submit">SAVE MEMORY</button>
+          <button class="primary full" id="saveBtn" type="submit">Save memory</button>
         <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready to save.</div>
           <details class="when" id="whenDetails">
-            <summary>Change when it happened <span class="soft">(optional)</span></summary>
+            <summary>Change event time <span class="soft">(optional)</span></summary>
             <label for="occurredAt">Date and time of the event</label>
             <input id="occurredAt" type="datetime-local">
             <p class="help">Leave unchanged to use the current date and time.</p>
@@ -581,14 +574,14 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <p id="lastMemorySave" class="help"></p>
         <section id="recentMemory" class="panel" aria-labelledby="recentHeading" hidden><div class="row titlebar"><h2 id="recentHeading">Last recorded memory</h2><button id="editRecent" class="outline tiny" data-action="edit" type="button">Edit last memory</button></div><p id="recentMemoryTime" class="help"></p><p id="recentMemoryText"></p></section>
         <p class="device-note">Memories stay on this iPhone. Keep a backup in Files. Choosing iCloud Drive uploads that backup to your Apple account.</p>
-        <button class="outline full" id="quickBackup" type="button">BACK UP MEMORIES</button><p id="backupSummary" class="help"></p>
+        <button class="outline full" id="quickBackup" type="button">Back up memories</button><p id="backupSummary" class="help"></p>
         <div class="divider"></div>
-        <div class="row titlebar"><h2>Recorded today</h2><button class="outline tiny" id="todayAll" type="button">See My Days</button></div>
+        <div class="row titlebar"><h2>Recorded today</h2><button class="outline tiny" id="todayAll" type="button">My Days</button></div>
         <div id="todayList" class="entries"></div>
       </section>
       <section class="page" id="page-days" aria-labelledby="heading-days" hidden>
         <h1 id="heading-days">My Days</h1>
-        <p class="intro">Look back through what you've recorded.</p>
+        <p class="intro">Your memories, day by day.</p>
         <div class="controls-date">
           <div class="date-buttons"><button class="outline" id="showToday" type="button">Today</button><button class="outline" id="showYesterday" type="button">Yesterday</button><button class="outline" id="showWeek" type="button">Last 7 days</button><button class="outline" id="showAll" type="button">All days</button></div>
           <label for="dayPicker">Choose a date</label>
@@ -600,12 +593,12 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
       </section>
       <section class="page" id="page-find" aria-labelledby="heading-find" hidden>
         <h1 id="heading-find">Find a memory</h1>
-        <label for="searchInput">Search by name, word or topic</label>
-        <input id="searchInput" type="search" maxlength="1000" placeholder="Start typing to search" autocomplete="off">
+        <label for="searchInput">Name, word or phrase</label>
+        <input id="searchInput" type="search" maxlength="1000" placeholder="Search your memories" autocomplete="off">
         <label class="check-row"><input id="wholeNames" type="checkbox"> Match whole names or words</label>
-        <p class="help">Type a person’s name to find entries mentioning it. Whole-name matching avoids Ann matching Joanna; it does not identify people or link nicknames.</p>
-        <details class="when"><summary>Date range (optional)</summary><label for="searchFrom">From date</label><input id="searchFrom" type="date"><label for="searchTo">To date</label><input id="searchTo" type="date"></details>
-        <p class="help">Use names or several words. Put an exact phrase in double quotes, such as “call tomorrow”. Every word or quoted phrase must match.</p><button class="outline" id="clearSearch" type="button">Clear search</button>
+        <p class="help">Use the name as written. Whole-name matching keeps Ann separate from Joanna; nicknames are not linked.</p>
+        <div class="date-filter"><button id="toggleDates" class="outline full" type="button" aria-expanded="false" aria-controls="dateFields">Show date range</button><div id="dateFields" class="stack" hidden><label for="searchFrom">From date</label><input id="searchFrom" type="date"><label for="searchTo">To date</label><input id="searchTo" type="date"><p class="help">Dates keep filtering until you clear search.</p></div></div>
+        <p class="help">Use quotes for an exact phrase, such as “call tomorrow”. All search words must match.</p><button class="outline" id="clearSearch" type="button">Clear search</button>
         <p id="findCount" class="info" role="status" aria-live="polite"></p>
         <div id="searchList" class="entries"></div>
       </section>
@@ -615,7 +608,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
           <p>Paste or type text, or tap Read on a saved memory.</p>
           <label for="visionText">Text to read</label>
           <textarea id="visionText" rows="7" maxlength="60000" autocomplete="off" placeholder="Paste text here"></textarea>
-          <button class="primary full" id="openReader" type="button">OPEN READER</button>
+          <button class="primary full" id="openReader" type="button">Open reader</button>
           <p class="help" id="visionDraftStatus">Reading text stays on this device. It is separate from saved memories and memory backups.</p>
         </div>
         <div id="visionReaderPanel" class="stack" hidden>
@@ -628,16 +621,16 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
           </div></details>
           <div id="readerText" class="reader" tabindex="0" role="region" aria-label="Reading text"></div>
           <div id="focusControls" class="stack" hidden><p id="focusPosition" role="status"></p><div class="row"><button class="outline" id="focusPrevious" type="button">Previous part</button><button class="outline" id="focusNext" type="button">Next part</button></div></div>
-          <button class="primary full" id="speakBtn" type="button">READ ALOUD</button>
+          <button class="primary full" id="speakBtn" type="button">Read aloud</button>
           <div class="speech-buttons"><button class="outline" id="pauseSpeech" type="button" disabled>Pause</button><button class="outline" id="stopSpeech" type="button" disabled>Stop</button></div>
           <p id="speechStatus" role="status" aria-live="polite"></p><p id="speechAvailability" class="help"></p>
         </div>
       </section>
       <section class="page" id="page-assistant" aria-labelledby="heading-assistant" hidden>
         <h1 id="heading-assistant">Everyday Assistant</h1>
-        <h2>Flagged follow-ups</h2><p class="help">Only memories you flag yourself. Clear the flag when finished; the memory stays saved. No notifications.</p><div id="followupList" class="entries"></div><div class="divider"></div>
+        <h2>Follow-ups</h2><p class="help">Only memories you flag yourself. Clear the flag when finished; the memory stays saved. No notifications.</p><div id="followupList" class="entries"></div><div class="divider"></div>
         <h2>Important memories</h2><p class="help">Memories you chose to pin. Deleted memories stay out of these lists.</p><div id="pinnedList" class="entries"></div>
-        <div class="divider"></div><h2>Possible plans &amp; commitments</h2><p class="help">Saved entries containing words such as “I need to”, “meeting” or “appointment”. These are your exact entries, not verified tasks or scheduled reminders. Negatives, quotes and completed plans can appear here. Pin anything important yourself.</p><div id="plansList" class="entries"></div>
+        <div class="divider"></div><h2>Possible plans</h2><p class="help">Saved entries containing words such as “I need to”, “meeting” or “appointment”. These are your exact entries, not verified tasks or scheduled reminders. Negatives, quotes and completed plans can appear here. Pin anything important yourself.</p><div id="plansList" class="entries"></div>
       </section>
       <section class="page" id="page-settings" aria-labelledby="heading-settings" hidden>
         <div class="row titlebar"><h1 id="heading-settings">Settings</h1><button class="outline tiny" id="settingsClose" type="button">Back</button></div>
@@ -653,7 +646,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack">
           <h2>Back up your memories</h2>
           <p>Download a file containing your memories. Keep a copy in a safe place. It is <strong>not encrypted</strong>.</p>
-          <button class="outline full" type="button" id="exportBtn">DOWNLOAD BACKUP</button><p id="backupSettingsStatus" class="help"></p><p id="lastMemorySaveSettings" class="help"></p><p class="help">Exports contain saved memories and settings. Unsaved drafts are kept separately on this device.</p>
+          <button class="outline full" type="button" id="exportBtn">Export backup</button><p id="backupSettingsStatus" class="help"></p><p id="lastMemorySaveSettings" class="help"></p><p class="help">Exports contain saved memories and settings. Unsaved drafts are kept separately on this device.</p>
           <label for="importFile">Restore or transfer a backup</label>
           <input type="file" id="importFile" accept="application/json,.json">
           <p class="help">Import keeps existing memories and adds new ones. Your original memories remain on this iPhone. You can import previous backups without replacing everything.</p>
@@ -663,10 +656,10 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.10.1 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
-    <footer>Everyday HQ · Your private daily memory diary</footer>
+    <footer>Everyday HQ · Earle’s Bureau</footer>
   </div>
   <div id="boot" class="boot" role="status">Opening Everyday HQ…<p class="help">If this stays here, close other Everyday HQ tabs and reopen this page. Do not clear Safari data.</p><noscript><p>JavaScript must be enabled in Safari to open your diary.</p></noscript></div>
   <div id="fatal" class="fatal" role="alert" hidden><h1>Could not load memories</h1><p>Your saved information was not changed. Close and reopen the app. Do not record anything new here until the problem is resolved.</p><p id="fatalDetail"></p></div>
@@ -675,7 +668,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
       <label for="editText">What happened?</label>
       <textarea id="editText" rows="6" maxlength="12000" required></textarea>
       <label for="editOccurred">When did it happen?</label><input id="editOccurred" type="datetime-local" required>
-      <div class="row"><button class="outline" id="cancelEdit" type="button">Cancel</button><button class="primary" id="confirmEdit" type="submit">SAVE CHANGES</button></div>
+      <div class="row"><button class="outline" id="cancelEdit" type="button">Cancel</button><button class="primary" id="confirmEdit" type="submit">Save changes</button></div>
     </form></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 </body>

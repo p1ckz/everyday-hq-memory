@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-aqOmbNwCeogR/PGr1E98tggI8W/47B8N2wF8trn/VHE='; style-src 'sha256-z+yJuv4ousuj21KVrlO276sbhazvrQ99JoMhW+u/Reo='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-VwSCIHxPLcN72ajuahPvI+x7pcQ129l0tsRQzIv/p1o='; style-src 'sha256-2pBvx854f4aVxM3izptDusuCbd+bElWn9085opI79OQ='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -33,12 +33,12 @@ main{padding-bottom:1.5rem}.stack{display:grid;gap:.7rem;min-width:0}.row{displa
 footer{border-top:1px solid #434343;padding:16px 0 24px;font-size:.78rem}dialog{background:#090909;color:#fff;border:1px solid #a0a0a0;border-radius:12px;width:min(calc(100% - 24px),680px);max-height:calc(100% - 24px);overflow-y:auto;padding:20px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{pointer-events:none;position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#222;color:#fff;border:1px solid #a0a0a0;padding:.5rem .75rem;font-size:.9rem;font-weight:600;border-radius:9px;box-shadow:0 4px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:24px auto;background:#111;color:#fff;border:1px solid #a0a0a0;border-radius:10px;padding:24px}
 mark{background:#fff;color:#000;font-weight:700;padding:0 .03em}#editRecoveryText{white-space:pre-wrap;overflow-wrap:anywhere}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
 @media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:calc(100% - 32px)}.top{padding:16px 0 12px}.brand strong{font-size:.9rem}.brand span:not(.brandmark){font-size:.75rem}.top .tiny{padding:.4rem .5rem}.tabs{gap:4px}.tab{padding:.4rem .35rem}.memory-tabs{padding-top:0}dialog{padding:16px}}
-@media(max-width:360px){.top{gap:8px}.brand{gap:8px}.brandmark{width:32px;height:32px}.brand strong{font-size:.85rem}.brand span:not(.brandmark){font-size:.7rem}.date-buttons{grid-template-columns:1fr}.sizes button{flex-basis:100%}}
+@media(max-width:360px){.top{gap:8px}.brand{gap:8px}.brandmark{width:32px;height:32px}.brand strong{font-size:.85rem}.brand span:not(.brandmark){font-size:.7rem}.date-buttons,.day-step{grid-template-columns:1fr}.sizes button{flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
   <title>Everyday HQ — Remember your day</title>
   <script>'use strict';
-// Everyday HQ 1.11.0: private iPhone on-device memory diary. No analytics or cloud sync.
+// Everyday HQ 1.11.1: private iPhone on-device memory diary. No analytics or cloud sync.
 const LAYOUT_TEST=new URLSearchParams(location.search).get('layout-test')==='1';
 const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
 const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
@@ -682,7 +682,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
         <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
         <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
-        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.11.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.11.1 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
     <footer>Everyday HQ · Earle’s Bureau</footer>

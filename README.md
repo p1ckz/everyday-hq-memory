@@ -49,3 +49,5 @@ Release 1.10.2 fixes a browser-audit finding: rapid reader setting changes could
 Release 1.11.0 adds Today and Yesterday shortcuts immediately below the memory form, with saved-entry counts. My Days keeps the date picker enabled in All days and Last 7 days; choosing a date switches straight to that day's entries. Previous day / Next day use local calendar arithmetic across daylight-saving, leap-day and year boundaries. Current range selection has a visible pressed state; clearing the date returns safely to Today. Existing data, drafts, backup format, update protection, reader and local Assistant are unchanged. No AI service, account or cost added.
 
 Rollback source checkpoint: `8a61757e197984c15070402efd5100f8720b30bf` (1.10.2). To roll back presentation, restore that index.html and publish it with a fresh matching app/worker version and regenerated CSP hashes; never roll back, clear or replace user storage.
+
+Release 1.11.1 stacks Previous day / Next day at widths of 360 px and below to keep Huge text from breaking inside the word Previous. The release-specific layout test URLs avoid stale browser HTML. App logic, storage and backups are unchanged.

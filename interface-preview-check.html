@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en-GB">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; frame-src 'self'; style-src 'unsafe-inline'">
+<title>Everyday HQ — developer layout checks</title>
+<style>
+body{margin:20px;background:#070707;color:#fff;font:18px/1.5 system-ui}
+h1{font-size:26px}p{max-width:900px}.frames{display:flex;gap:20px;align-items:flex-start}
+iframe{display:block;border:0;background:#000}h2{font-size:22px}section{flex-shrink:0}
+</style>
+<h1>Everyday HQ — interface preview checks</h1>
+<p>Developer check only. These frames use the isolated <code>layout-test</code> data store. They do not read or write the live diary. Check Huge text, each section, dialogs and the reader at its largest size. This checks browser layout, not Safari, physical iPhone text scaling or speaker output.</p>
+<div class="frames">
+<section><h2>320 × 844</h2><iframe src="./interface-preview.html?layout-test=1&amp;release=1.12.0" width="320" height="844" title="320 pixel layout"></iframe></section>
+<section><h2>390 × 844</h2><iframe src="./interface-preview.html?layout-test=1&amp;release=1.12.0" width="390" height="844" title="390 pixel layout"></iframe></section>
+<section><h2>430 × 932</h2><iframe src="./interface-preview.html?layout-test=1&amp;release=1.12.0" width="430" height="932" title="430 pixel layout"></iframe></section>
+</div>
+</html>

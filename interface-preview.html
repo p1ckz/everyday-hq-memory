@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070707">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-Vg7uPH2RH+REaFjBSZ73e6DfRK241xFET3hxrCzjq1A='; style-src 'sha256-rJuu67hQITYfNdAxkF1Qo9L4IaWN3tWOf2N7eNDfGaY='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Everyday HQ">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A clear, simple diary for remembering your day.">
+  <style>:root{color-scheme:dark;--scale:1;--bg:#070707;--panel:#141414;--text:#fff;--border:#737373;--focus:#ffde59}
+*{box-sizing:border-box}
+html{font-size:calc(22px * var(--scale));scroll-behavior:auto;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button,input,textarea{font:inherit;color:inherit;touch-action:manipulation}
+button{cursor:pointer}input,textarea{display:block;background:#101010;border:1px solid var(--border);border-radius:16px;padding:.65rem .75rem;width:100%;min-width:0;max-width:100%}
+textarea{resize:vertical;min-height:188px;line-height:1.6;font-size:1rem}
+input[type=date],input[type=datetime-local]{color-scheme:dark;min-height:48px;font-size:.85rem}
+input::-webkit-date-and-time-value{text-align:left;min-width:0}input[type=file]{font-size:.85rem}
+::placeholder{color:#d0d0d0;opacity:1}h1,h2,h3,p{margin:0}h1,h2,h3{font-weight:650;line-height:1.3}h1{font-size:1.3rem;letter-spacing:-.018em;margin-bottom:.4rem}h2{font-size:1.08rem}h3{font-size:1rem}p{margin-bottom:.6rem}
+button,label,summary,h1,h2,h3{overflow-wrap:anywhere}label{font-weight:600;display:block}.intro{margin-bottom:1rem}
+.shell{width:min(calc(100% - 40px),760px);margin:0 auto;padding-top:env(safe-area-inset-top)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 16px;border-bottom:1px solid #434343;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brandmark{display:grid;place-items:center;width:36px;height:36px;border:1px solid #a0a0a0;border-radius:8px;flex-shrink:0}.brand strong{display:block;font-size:.95rem;font-weight:650;line-height:1.3;letter-spacing:-.01em}.brand span:not(.brandmark){display:block;font-size:.75rem;line-height:1.4}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0;margin-bottom:.8rem;border-bottom:1px solid #434343}.tab{flex:1 1 auto;min-width:max-content;min-height:48px;padding:.5rem .2rem;border:0;border-radius:999px;background:transparent;color:#fff;font-size:.86rem;font-weight:550;line-height:1.4}.tab.selected{background:#242424;font-weight:650;text-decoration:underline;text-underline-offset:.24em;text-decoration-thickness:2px}.tab:hover{background:#242424}
+.tools{position:relative;flex-shrink:0;margin-left:auto}.tools>summary{list-style:none;cursor:pointer;min-height:48px;padding:.4rem .65rem;border-radius:999px;background:#242424;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:.35rem}.tools>summary::-webkit-details-marker{display:none}.tools>summary::after{content:'⌄';font-size:1em}.tools[open]>summary{outline:1px solid #aaa}.tool-menu{position:absolute;right:0;top:calc(100% + 8px);width:min(82vw,340px);padding:.4rem;background:#151515;border:1px solid #737373;border-radius:18px;box-shadow:0 12px 32px #000b;z-index:8;display:grid;gap:4px}.tool-link{width:100%;text-align:left;background:transparent;border:0;border-radius:12px;color:#fff;font-size:.9rem;font-weight:550;padding:.6rem .7rem;min-height:48px}.tool-link:hover,.tool-link:focus-visible{background:#2b2b2b}.tool-link.selected{text-decoration:underline;text-underline-offset:.2em}.tool-menu .tool-link+ .tool-link{border-top:1px solid #434343}
+
+main{padding-bottom:1.5rem}.stack{display:grid;gap:.7rem;min-width:0}.row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}.titlebar{margin-bottom:.65rem}
+.primary,.outline{border:1px solid var(--border);border-radius:18px;background:#1c1c1c;color:#fff;padding:.5rem .75rem;font-weight:600;min-height:48px;line-height:1.4;max-width:100%}.primary{background:#303030;border-color:#a0a0a0;font-weight:650}.primary:hover{background:#404040}.outline{border-color:transparent}.outline:hover{background:#303030}.outline[aria-pressed=true]{border-color:#aaa;text-decoration:underline;text-underline-offset:.2em}.primary:disabled,.outline:disabled{opacity:.6;cursor:not-allowed}.full{width:100%}.tiny{font-size:.82rem;padding:.4rem .6rem;min-height:44px;flex-shrink:0}
+.when{border:0;border-bottom:1px solid #434343;padding:.4rem 0;border-radius:0;min-width:0}.when summary{cursor:pointer;font-size:.9rem;font-weight:550;min-height:44px;align-content:center;padding:.25rem 0}.when label{margin-top:.65rem}.when input{margin-top:.3rem}.soft,.help{font-size:.83rem}.help{line-height:1.5}.device-note{font-size:.83rem;line-height:1.5;margin-top:.8rem;margin-bottom:.75rem}.divider{height:1px;background:#434343;margin:1.25rem 0}.save-status{font-size:.9rem;font-weight:600;min-height:1.5rem;margin:0}
+.entries{display:grid;gap:0;margin-top:.6rem}.entry,.panel,.empty{overflow-wrap:anywhere;min-width:0;max-width:100%}.entry{border:0;border-bottom:1px solid #737373;padding:1rem 0;background:transparent}.entry:first-child{padding-top:.4rem}.entry p{white-space:pre-wrap;margin:0 0 .7rem}.entry .whenline{font-weight:600;font-size:.85rem;margin-bottom:.6rem}.entry .actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}.entry .actions button{border-radius:999px;min-height:48px;padding:.35rem .6rem;font-size:.85rem;font-weight:550}.entry .actions [aria-pressed=true]{background:#303030;border-color:#fff}.panel,.empty{background:var(--panel);border:0;border-radius:18px;padding:.8rem;margin-bottom:.8rem}.empty{line-height:1.5}
+.controls-date{padding:0;margin:.8rem 0 1rem;display:grid;gap:.6rem;min-width:0}.date-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.date-buttons button{border-radius:999px;min-width:0;padding:.5rem .35rem;font-size:.9rem}.controls-date label{font-weight:600}.day-step{display:grid;grid-template-columns:1fr 1fr;gap:8px}.day-step button{border-radius:16px;min-width:0;font-size:.9rem}.date-buttons [aria-pressed=true]{background:#303030;border-color:#fff;text-decoration:underline;text-underline-offset:.2em}.quick-days{margin:.8rem 0}#chosenDateHeading{margin:1rem 0 .45rem}.day-heading{font-size:1.08rem;margin:1rem 0 .2rem;line-height:1.4;border-bottom:1px solid #434343;padding-bottom:.35rem}.info{padding:.6rem 0}#searchInput{margin:.5rem 0 .8rem}#page-find .when{margin-top:.8rem}.sizes{display:flex;gap:8px;flex-wrap:wrap;min-width:0}.sizes button{flex:1 1 140px;min-width:0}.sizes button[aria-pressed=true]{background:#303030;border-color:#fff;text-decoration:underline;text-underline-offset:.2em}.pin-label{font-weight:600;font-size:.85rem;text-decoration:underline}.recap-list{list-style:none;padding:0;display:grid;gap:10px}.recap-list button{text-align:left;font-size:.9rem}
+.reader{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;background:#000;color:#fff;padding:.75rem;border:1px solid #737373;border-radius:9px;min-height:200px}.reader-settings{margin-top:.8rem}.reader-settings input[type=range]{padding:0;min-height:48px;accent-color:#fff}.check-row{display:flex;gap:12px;align-items:center;font-size:.9rem;min-height:44px;margin:.6rem 0}.check-row input{width:32px;height:32px;flex-shrink:0;accent-color:#fff}.date-filter{margin:.65rem 0}.date-filter #toggleDates{background:transparent;text-align:left;border-radius:0;border-bottom:1px solid #737373;padding-left:0}.search-help{margin:.65rem 0}.search-help p{margin-top:.5rem}#recentMemory{background:transparent;padding:.7rem 0;border-radius:0;border-bottom:1px solid #434343}#page-write .device-note{margin:.6rem 0}.brandmark{border:0}.top{border-bottom:0;padding-bottom:8px}.date-filter #dateFields{padding:.75rem 0}.date-filter #toggleDates::after{content:" +"}.date-filter #toggleDates[aria-expanded=true]::after{content:" −"}.speech-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+footer{border-top:1px solid #434343;padding:16px 0 24px;font-size:.78rem}dialog{background:#090909;color:#fff;border:1px solid #a0a0a0;border-radius:12px;width:min(calc(100% - 24px),680px);max-height:calc(100% - 24px);overflow-y:auto;padding:20px}dialog::backdrop{background:#000c}dialog .row>*{flex:1}.toast{pointer-events:none;position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:min(94vw,700px);background:#222;color:#fff;border:1px solid #a0a0a0;padding:.5rem .75rem;font-size:.9rem;font-weight:600;border-radius:9px;box-shadow:0 4px 20px #000;z-index:10}.boot,.fatal{max-width:760px;margin:24px auto;background:#111;color:#fff;border:1px solid #a0a0a0;border-radius:10px;padding:24px}
+mark{background:#fff;color:#000;font-weight:700;padding:0 .03em}#editRecoveryText{white-space:pre-wrap;overflow-wrap:anywhere}.skip{position:absolute;left:12px;top:-100px;background:#fff;color:#000;padding:10px;z-index:11}.skip:focus{top:10px}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(max-width:600px){html{font-size:calc(20px * var(--scale))}.shell{width:calc(100% - 32px)}.top{padding:16px 0 12px}.brand strong{font-size:.9rem}.brand span:not(.brandmark){font-size:.75rem}.top .tiny{padding:.4rem .5rem}.tabs{gap:4px}.tab{padding:.45rem .15rem}dialog{padding:16px}}
+@media(max-width:360px){.top{gap:8px}.brand{gap:8px}.brandmark{width:32px;height:32px}.brand strong{font-size:.85rem}.brand span:not(.brandmark){font-size:.7rem}.date-buttons,.day-step{grid-template-columns:1fr}.tabs{display:grid;grid-template-columns:1fr 1fr}.tabs .tab:first-child{grid-column:1/-1}.sizes button{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+  <title>Everyday HQ — Remember your day</title>
+  <script>'use strict';
+// Everyday HQ 1.12.0: private iPhone on-device memory diary. No analytics or cloud sync.
+const LAYOUT_TEST=true; // Developer preview: always isolated from the live diary.
+const SCHEMA='everydayHQ.v2', DBNAME=LAYOUT_TEST?'EverydayHQ_layout_test_v1':'EverydayHQ_v13', STORAGE='storage', MAX_ITEMS=5000;
+const DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.draft.v1':'everydayHQ.draft.v1', DRAFT_META_KEY=LAYOUT_TEST?'everydayHQ.test.draft.date.v1':'everydayHQ.draft.date.v1';
+const $=id=>document.getElementById(id);
+const nowISO=()=>new Date().toISOString();
+const validDate=v=>typeof v==='string' && !Number.isNaN(Date.parse(v));
+const dayKey=value=>{const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const localTimeInput=iso=>{const d=new Date(iso);return `${dayKey(iso)}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+const formatTime=iso=>new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+const formatDate=iso=>new Date(iso).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const defaultVision=()=>({font:40,line:1.8,spacing:0,focus:false});
+const blank=()=>({schema:SCHEMA,revision:0,items:[],preferences:{scale:1.4,vision:defaultVision()}});
+const uuid=()=>crypto.randomUUID?crypto.randomUUID():`m-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+function validated(input){
+ if(!input||typeof input!=='object'||input.schema!==SCHEMA||!Array.isArray(input.items)||input.items.length>MAX_ITEMS)throw new Error('The saved file is not an Everyday HQ memory backup.');
+ const ids=new Set();
+ const items=input.items.map(row=>{
+  if(!row||typeof row.id!=='string'||row.id.length>100||ids.has(row.id)||typeof row.text!=='string'||row.text.length>12000||!validDate(row.occurredAt)||!validDate(row.createdAt)||!validDate(row.updatedAt)||(row.deletedAt!==null&&row.deletedAt!==undefined&&!validDate(row.deletedAt)))throw new Error('A memory in the saved file has invalid information.');
+  ids.add(row.id);
+  return {id:row.id,text:row.text,occurredAt:row.occurredAt,createdAt:row.createdAt,updatedAt:row.updatedAt,deletedAt:row.deletedAt||null,pinned:row.pinned===true,followUp:row.followUp===true};
+ });
+ const scale=Number(input.preferences?.scale),v=input.preferences?.vision||{},defaults=defaultVision();
+ const bounded=(value,min,max,fallback)=>typeof value==='number'&&Number.isFinite(value)&&value>=min&&value<=max?value:fallback;
+ const vision={font:bounded(v.font,28,80,defaults.font),line:bounded(v.line,1.4,2.4,defaults.line),spacing:bounded(v.spacing,0,6,defaults.spacing),focus:v.focus===true};
+ return {schema:SCHEMA,revision:Number.isInteger(input.revision)&&input.revision>=0?input.revision:0,items,preferences:{scale:[1,1.2,1.4].includes(scale)?scale:1.2,vision}};
+}
+let db=null,mode='browser',state=blank(),page='write',editingID=null,busy=false,notificationTimeout,dayMode='today';
+function status(message){$('saveStatus').textContent=message}
+function toast(message){let t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(notificationTimeout);notificationTimeout=setTimeout(()=>t.hidden=true,4500)}
+function transact(db,mode,callback){return new Promise((resolve,reject)=>{const tx=db.transaction(STORAGE,mode),store=tx.objectStore(STORAGE);let result;try{result=callback(store)}catch(e){tx.abort();reject(e);return}tx.oncomplete=()=>resolve(result);tx.onerror=()=>reject(tx.error||new Error('Browser storage error'));tx.onabort=()=>reject(tx.error||new Error('Browser storage cancelled'))})}
+async function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DBNAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORAGE))d.createObjectStore(STORAGE)};let settled=false;const timer=setTimeout(()=>{settled=true;reject(new Error('Storage took too long to open. Close other Everyday HQ tabs and reopen this one.'))},10000);req.onsuccess=()=>{clearTimeout(timer);if(settled){req.result.close();return}settled=true;req.result.onversionchange=()=>req.result.close();resolve(req.result)};req.onerror=()=>{clearTimeout(timer);settled=true;reject(req.error)};req.onblocked=()=>{clearTimeout(timer);settled=true;reject(new Error('Close other Everyday HQ tabs and reopen this one.'))}})}
+async function getFromDB(key){return new Promise((resolve,reject)=>{const tx=db.transaction(STORAGE,'readonly');const r=tx.objectStore(STORAGE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function browserSave(next,expectedRevision){
+ // Read and write everything in one transaction. A second tab must not silently
+ // overwrite memories created by the first tab after the current state was loaded.
+ return new Promise((resolve,reject)=>{
+  const tx=db.transaction(STORAGE,'readwrite'),store=tx.objectStore(STORAGE);
+  let reason=null;
+  const fail=err=>{reason=err;try{tx.abort()}catch(_){}};
+  store.get('state').onsuccess=e=>{
+   const previous=e.target.result||blank();
+   if(previous.revision!==expectedRevision){fail(new Error('New memories were saved in another open window. Close and reopen this app to see them before saving.'));return}
+   store.get('snapshots').onsuccess=ev=>{
+    const snapshots=Array.isArray(ev.target.result)?ev.target.result:[];
+    snapshots.push({when:nowISO(),state:previous});
+    store.put(snapshots.slice(-5),'snapshots');
+    store.put(next,'state');
+   };
+  };
+  tx.oncomplete=()=>resolve();
+  tx.onabort=()=>reject(reason||tx.error||new Error('The memory could not be saved to this device.'));
+  tx.onerror=()=>{};
+ });
+}
+function saveDraft(){
+ const text=$('memoryText').value;
+ try{
+  if(text.trim()){
+   localStorage.setItem(DRAFT_KEY,text);
+   localStorage.setItem(DRAFT_META_KEY,JSON.stringify({text,occurredAt:$('occurredAt').value}));
+   status('Draft kept on this device — press SAVE MEMORY when ready.');
+  }else{clearDraft();status('Ready to save.')}
+  return true;
+ }catch(_){status('Draft could not be kept — press SAVE MEMORY before leaving.');return false}
+}
+function loadDraft(){
+ try{
+  const draft=localStorage.getItem(DRAFT_KEY);
+  if(draft){
+   $('memoryText').value=draft;
+   try{const meta=JSON.parse(localStorage.getItem(DRAFT_META_KEY));if(meta?.text===draft&&validDate(meta.occurredAt)){$('occurredAt').value=meta.occurredAt;$('whenDetails').open=true}}catch(_){}
+   status('Draft restored — press SAVE MEMORY when ready.');
+  }
+ }catch(_){status('Draft storage unavailable. Save your memory before leaving.')}
+}
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);localStorage.removeItem(DRAFT_META_KEY)}catch(_){}}
+async function initStorage(){
+ // Windows executable serves a local file-backed API. The hosted PWA uses IndexedDB.
+ if(location.hostname==='127.0.0.1'||location.hostname==='localhost'){
+  try{const r=await fetch('/api/state',{headers:{'X-Everyday-HQ':'local-app'},cache:'no-store'});
+   if(r.ok){const payload=await r.json();state=payload?validated(payload):blank();mode='windows';return}
+   if(r.status!==404)throw new Error(`Local memory file could not be opened (code ${r.status}).`);
+  }catch(err){if(!(err instanceof TypeError))throw new Error('Could not connect to your Windows diary storage. Close and reopen Everyday HQ. '+(err.message||''))}
+ }
+ db=await openDB();const saved=await getFromDB('state');state=saved?validated(saved):blank();mode='browser';
+}
+async function persist(next){
+ if(mode==='windows'){
+  const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json','X-Everyday-HQ':'local-app'},body:JSON.stringify(next),cache:'no-store'});
+  if(!r.ok){if(r.status===409)throw new Error('This diary changed in another window. Reopen the app before editing.');throw new Error(`Could not save to the Windows memory file (code ${r.status}).`)}
+  return validated(await r.json());
+ }
+ const expected=state.revision;next.revision=expected+1;await browserSave(next,expected);return next;
+}
+async function update(modifier){
+ if(busy)return false;
+ busy=true;const before=structuredClone(state),next=structuredClone(state);
+ try{modifier(next);next.schema=SCHEMA;state=await persist(validated(next))}
+ catch(err){state=before;status('NOT SAVED. Your previous memories have not changed.');toast(err.message||'Could not save; try again.');return false}
+ finally{busy=false}
+ // A completed storage transaction must never be rolled back in memory merely
+ // because a view fails to redraw. Retain its revision and report the truth.
+ status('Saved safely on this device.');
+ try{render()}catch(err){status('Saved on this device. Reopen the app to refresh the display.');toast('Your save completed. Reopen the app to refresh the display.');console.error(err)}
+ return true;
+}
+function sortItems(items){return [...items].sort((a,b)=>Date.parse(b.occurredAt)-Date.parse(a.occurredAt)||Date.parse(b.createdAt)-Date.parse(a.createdAt))}
+function visibleItems(){return sortItems(state.items.filter(item=>!item.deletedAt))}
+function empty(container,message){const p=document.createElement('div');p.className='empty';p.textContent=message;container.replaceChildren(p)}
+function makeEntry(item,terms=[],whole=false){
+ const root=document.createElement('article');root.className='entry';root.dataset.id=item.id;
+ const time=document.createElement('div');time.className='whenline';time.textContent=`${formatDate(item.occurredAt)} · ${formatTime(item.occurredAt)}`;
+ const text=document.createElement('p');highlightText(text,item.text,terms,whole);
+ const controls=document.createElement('div');controls.className='actions';
+ for(const [name,action] of [[item.pinned?'Unpin':'Pin','pin'],[item.followUp?'Clear follow-up':'Follow up','followup'],['Read','read'],['Edit','edit'],['Delete','delete']]){const b=document.createElement('button');b.type='button';b.className='outline';b.textContent=name;b.dataset.action=action;b.dataset.id=item.id;if(action==='pin'||action==='followup')b.setAttribute('aria-pressed',String(action==='pin'?item.pinned:item.followUp));controls.append(b)}
+ if(item.pinned){const pin=document.createElement('p');pin.className='pin-label';pin.textContent='Pinned · important';root.append(pin)}if(item.followUp){const flag=document.createElement('p');flag.className='pin-label';flag.textContent='Follow-up flagged';root.append(flag)}root.append(time,controls,text);return root;
+}
+function renderEntries(container,items,message,groupByDay=false,terms=[],whole=false){
+ container.replaceChildren();if(!items.length){empty(container,message);return}
+ let lastDay='';
+ for(const item of items.slice(0,250)){
+  const date=dayKey(item.occurredAt);
+  if(groupByDay&&date!==lastDay){const h=document.createElement('h3');h.className='day-heading';h.textContent=formatDate(item.occurredAt);container.append(h);lastDay=date}
+  container.append(makeEntry(item,terms,whole));
+ }
+ if(items.length>250){const msg=document.createElement('p');msg.textContent='Showing 250 memories. Choose a date or use Find to narrow the list.';container.append(msg)}
+}
+function render(){
+ document.documentElement.style.setProperty('--scale',state.preferences.scale);
+ document.querySelectorAll('[data-scale]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.scale)===state.preferences.scale)));
+ const items=visibleItems(),today=dayKey(nowISO());
+ renderEntries($('todayList'),items.filter(item=>dayKey(item.occurredAt)===today).slice(0,8),'Nothing recorded today yet.');
+ if(dayMode==='today')$('dayPicker').value=today;
+ const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);const yesterdayKey=dayKey(yesterday);
+ for(const [id,label,count] of [['quickToday','Today',items.filter(x=>dayKey(x.occurredAt)===today).length],['quickYesterday','Yesterday',items.filter(x=>dayKey(x.occurredAt)===yesterdayKey).length],['showToday','Today',items.filter(x=>dayKey(x.occurredAt)===today).length],['showYesterday','Yesterday',items.filter(x=>dayKey(x.occurredAt)===yesterdayKey).length],['showWeek','Last 7 days',weekMemories(items).length]])$(id).textContent=`${label} (${count})`;
+ const recent=[...items].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt)||Date.parse(b.updatedAt)-Date.parse(a.updatedAt))[0];
+ $('recentMemory').hidden=!recent;
+ if(recent){$('recentMemoryText').textContent=recent.text.length>180?recent.text.slice(0,180)+'…':recent.text;$('recentMemoryTime').textContent=`Event: ${formatDate(recent.occurredAt)} at ${formatTime(recent.occurredAt)}. Recorded: ${formatDate(recent.createdAt)} at ${formatTime(recent.createdAt)}.`;$('editRecent').dataset.id=recent.id}
+ const latest=state.items.reduce((last,x)=>Date.parse(x.updatedAt)>Date.parse(last||'1970-01-01')?x.updatedAt:last,null);
+ const savedMessage=latest?`Last memory saved or edited: ${formatDate(latest)} at ${formatTime(latest)}.`:'No saved memories yet.';
+ $('lastMemorySave').textContent=savedMessage;$('lastMemorySaveSettings').textContent=savedMessage;
+ const current=$('dayPicker').value||today;
+ const all=dayMode==='all'||dayMode==='week',week=dayMode==='week';
+ $('chosenDateHeading').textContent=week?'Last seven days':all?'All my memories':formatDate(new Date(current+'T12:00:00').toISOString());
+ renderEntries($('dayList'),week?weekMemories(items):all?items:items.filter(item=>dayKey(item.occurredAt)===current),all?'Nothing recorded yet.':'No memories recorded on this date.',all);
+ $('dayPicker').disabled=false;
+ for(const [id,selected] of [['showToday',!all&&current===today],['showYesterday',!all&&current===yesterdayKey],['showWeek',week],['showAll',dayMode==='all']])$(id).setAttribute('aria-pressed',String(selected));
+ const reviewed=weekMemories(items),bounds=sevenDayBounds();
+ $('dayModeStatus').textContent=week?`${bounds.from} to ${bounds.to}: ${reviewed.length} saved memories across ${new Set(reviewed.map(x=>dayKey(x.occurredAt))).size} of seven days. Days without entries have no recorded information.`:all?'Most recent first. Showing every recorded day.':'Memories from the chosen date.';
+ const query=$('searchInput').value.trim(),from=$('searchFrom').value,to=$('searchTo').value,active=Boolean(query||from||to),invalid=Boolean(from&&to&&from>to);
+ const found=active&&!invalid?searchMemories(items,query,from,to,$('wholeNames').checked):[];
+ $('findCount').textContent=invalid?'Choose a From date on or before the To date.':active?`${found.length} matching ${found.length===1?'memory':'memories'}.`:'Type a name or phrase, or choose a date range.';
+ if(!invalid&&(from||to))$('findCount').textContent+=` Dates: ${from||'any start'} to ${to||'any end'}.`;
+ renderEntries($('searchList'),found,invalid?'The date range needs correcting.':active?'No memories match this search.':'Search for something you remember.',false,searchTerms(query),$('wholeNames').checked);
+ $('storageDescription').textContent=mode==='windows'?'Your memories stay on this device.':'Memories stay in storage on this iPhone or browser. Removing the app, clearing its data, or device failure can erase them. Download backups regularly. There is no online sync.';
+ renderDeleted();renderAssistant();renderRecap(items,all);renderVisionPreferences();renderBackupStatus();renderEditRecovery();
+}
+function renderDeleted(){
+ const place=$('deletedList');if(!place)return;
+ const deleted=sortItems(state.items.filter(x=>x.deletedAt));place.replaceChildren();
+ if(!deleted.length){empty(place,'No recently deleted memories.');return}
+ for(const m of deleted){const row=document.createElement('div');row.className='entry';const p=document.createElement('p');p.textContent=m.text.slice(0,260);const b=document.createElement('button');b.type='button';b.className='outline';b.textContent='Restore';b.dataset.action='restore';b.dataset.id=m.id;row.append(p,b);place.append(row)}
+}
+let settingsReturn='write';
+function navigate(name){
+ if(!['write','days','find','settings','vision','assistant'].includes(name))return;
+ if(name==='settings'&&page!=='settings')settingsReturn=page;
+ if(page==='vision'&&name!=='vision')stopSpeaking();
+ page=name;
+ document.querySelectorAll('.page').forEach(el=>el.hidden=el.id!=='page-'+name);
+ $('memoryNav').hidden=false;$('toolsMenu').open=false;
+ document.querySelectorAll('[data-page]').forEach(button=>{
+  const selected=button.dataset.page===name;
+  button.classList.toggle('selected',selected);selected?button.setAttribute('aria-current','page'):button.removeAttribute('aria-current');
+ });
+ if(name==='days'&&!$('dayPicker').value)$('dayPicker').value=dayKey(nowISO());
+ render();window.scrollTo(0,0);
+ $('page-'+name).querySelector('h1')?.focus({preventScroll:true});
+}
+function chooseDay(value){
+ const chosen=new Date((value||dayKey(nowISO()))+'T12:00:00');
+ if(Number.isNaN(chosen.getTime()))return;
+ const key=dayKey(chosen);dayMode=key===dayKey(nowISO())?'today':'date';$('dayPicker').value=key;render();
+}
+function stepDay(offset){
+ const chosen=new Date(($('dayPicker').value||dayKey(nowISO()))+'T12:00:00');
+ chosen.setDate(chosen.getDate()+offset);chooseDay(dayKey(chosen));
+}
+function saveFile(name,content){const blob=new Blob([content],{type:'application/json'}),link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+async function backup(){
+ if(busy){toast('Wait for the current save to finish, then export.');return}
+ try{
+  // Export the latest committed data, even if another open window saved it.
+  const snapshot=mode==='browser'?validated(await getFromDB('state')||blank()):state;
+  const exportedAt=nowISO(),payload={...snapshot,exportedAt};
+  saveFile('EverydayHQ-backup-'+dayKey(exportedAt)+'.json',JSON.stringify(payload,null,2));
+  try{localStorage.setItem(BACKUP_STATUS_KEY,JSON.stringify({exportedAt}))}catch(_){}
+  renderBackupStatus();toast('Backup export requested. Check that the file was saved in Files.');
+ }catch(_){toast('Backup export did not complete. Try again; your memories have not changed.')}
+}
+function canonicalItem(item){const {id,pinned,followUp,...rest}=item;return JSON.stringify(rest)}
+function fixedHash(s){let hash=2166136261;for(let i=0;i<s.length;i++){hash^=s.charCodeAt(i);hash=Math.imul(hash,16777619)}return (hash>>>0).toString(16)}
+async function restoreBackup(file){
+ if(!file)return;
+ if(file.size>256*1024*1024){toast('This file is too large.');return}
+ let parsed;try{parsed=validated(JSON.parse(await file.text()))}catch(err){toast(err.message);return}
+ const known=new Map(state.items.map(item=>[item.id,item]));
+ const bodies=new Set(state.items.map(canonicalItem));
+ const newItems=[],pinIDs=new Set(),followIDs=new Set();let conflicts=0;
+ for(const item of parsed.items){
+  const existing=known.get(item.id);
+  if(!existing){newItems.push(item);known.set(item.id,item);bodies.add(canonicalItem(item));continue}
+  const body=canonicalItem(item);
+  if(existing&&canonicalItem(existing)===body){if(item.pinned&&!existing.pinned)pinIDs.add(item.id);if(item.followUp&&!existing.followUp)followIDs.add(item.id)}
+  if(bodies.has(body))continue;
+  // Preserve both edited versions, but importing the same backup twice must not
+  // create a new duplicate every time. An imported conflict gets a stable ID.
+  if(canonicalItem(existing)!==body){
+   let copyId='copy-'+item.id.slice(0,48)+'-'+fixedHash(body);
+   if(known.has(copyId)&&canonicalItem(known.get(copyId))!==body)copyId+='-'+fixedHash(item.id+body);
+   if(known.has(copyId))continue;
+   const copy={...item,id:copyId};newItems.push(copy);known.set(copyId,copy);bodies.add(body);conflicts++;
+  }
+ }
+ if(!newItems.length&&!pinIDs.size&&!followIDs.size){toast('No new or changed memories found in this backup.');return}
+ if(state.items.length+newItems.length>MAX_ITEMS){toast('Too many memories to import.');return}
+ if(!confirm(`Import ${newItems.length} ${newItems.length===1?'memory':'memories'}${pinIDs.size||followIDs.size?' and restore saved flags':''}? Your existing memories will be kept.${conflicts?' Different edited copies will also be kept.':''}`))return;
+ const ok=await update(next=>{next.items.push(...newItems);for(const item of next.items){if(pinIDs.has(item.id))item.pinned=true;if(followIDs.has(item.id))item.followUp=true}});
+ if(ok)toast(`Imported ${newItems.length} memories${pinIDs.size||followIDs.size?' and restored saved flags':''}. Existing memories were kept.`);
+}
+function selectEdit(id){const item=state.items.find(x=>x.id===id);if(!item||item.deletedAt)return;editingID=id;editingBase=structuredClone(item);$('editText').value=item.text;$('editOccurred').value=localTimeInput(item.occurredAt);$('editDialog').showModal()}
+async function onAction(e){const button=e.target.closest('button[data-action]');if(!button)return;const id=button.dataset.id,action=button.dataset.action,item=state.items.find(x=>x.id===id);if(!item)return;
+ if(action==='read'&&!item.deletedAt){loadMemoryInReader(item);return}
+ if(action==='followup'&&!item.deletedAt){const ok=await update(next=>{const r=next.items.find(x=>x.id===id);r.followUp=!r.followUp});if(ok)toast(item.followUp?'Follow-up cleared.':'Follow-up flagged.');return}
+ if(action==='pin'&&!item.deletedAt){const ok=await update(next=>{const r=next.items.find(x=>x.id===id);r.pinned=!r.pinned});if(ok)toast(item.pinned?'Memory unpinned.':'Memory pinned.');return}
+ if(action==='edit'){selectEdit(id);return}
+ if(action==='delete'){if(!confirm('Move this memory to Recently deleted? You can restore it later.'))return;const ok=await update(next=>{next.items.find(x=>x.id===id).deletedAt=nowISO()});if(ok)toast('Moved to Recently deleted.');return}
+ if(action==='restore'){const ok=await update(next=>{next.items.find(x=>x.id===id).deletedAt=null});if(ok)toast('Memory restored.');}
+}
+function wire(){
+ $('dayPicker').value=dayKey(nowISO());
+ $('memoryText').addEventListener('input',saveDraft);
+ $('occurredAt').addEventListener('input',saveDraft);
+ $('addForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(busy)return;const raw=$('memoryText').value,txt=raw.trim();if(!txt){toast('Write something first.');return}
+  const supplied=$('occurredAt').value;if(supplied&&!validDate(supplied)){toast('Choose a valid date and time.');return}
+  if(state.items.length>=MAX_ITEMS){toast('Too many entries. Export a backup before continuing.');return}
+  const stamp=nowISO(),occurredAt=supplied?new Date(supplied).toISOString():stamp;
+  $('saveBtn').disabled=true;status('Saving…');
+  const ok=await update(next=>next.items.push({id:uuid(),text:txt,occurredAt,createdAt:stamp,updatedAt:stamp,deletedAt:null}));
+  $('saveBtn').disabled=false;
+  if(ok){if($('memoryText').value===raw&&$('occurredAt').value===supplied){$('memoryText').value='';clearDraft();$('occurredAt').value='';$('whenDetails').open=false}else{saveDraft()}status(`Memory saved on this device at ${formatTime(stamp)}.`);toast('Memory saved.');if(!$('memoryText').value)$('memoryText').blur()}
+ });
+ document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
+ $('settingsOpen').addEventListener('click',()=>navigate('settings'));
+ $('settingsClose').addEventListener('click',()=>navigate(settingsReturn));
+ $('todayAll').addEventListener('click',()=>{dayMode='today'; $('dayPicker').value=dayKey(nowISO());navigate('days')});
+ $('showToday').addEventListener('click',()=>{dayMode='today';$('dayPicker').value=dayKey(nowISO());render()});
+ $('showYesterday').addEventListener('click',()=>{dayMode='date';const d=new Date();d.setDate(d.getDate()-1);$('dayPicker').value=dayKey(d.toISOString());render()});
+ $('showAll').addEventListener('click',()=>{dayMode='all';render()});
+ $('dayPicker').addEventListener('change',()=>chooseDay($('dayPicker').value));
+ $('previousDay').addEventListener('click',()=>stepDay(-1));
+ $('nextDay').addEventListener('click',()=>stepDay(1));
+ $('quickToday').addEventListener('click',()=>{chooseDay(dayKey(nowISO()));navigate('days')});
+ $('quickYesterday').addEventListener('click',()=>{const d=new Date();d.setDate(d.getDate()-1);chooseDay(dayKey(d));navigate('days')});
+ $('searchInput').addEventListener('input',render);
+ $('wholeNames').addEventListener('change',render);
+ document.addEventListener('click',onAction);
+ $('cancelEdit').addEventListener('click',cancelEdit);
+ $('editForm').addEventListener('submit',async e=>{
+  e.preventDefault();const id=editingID,item=state.items.find(x=>x.id===id);if(!item)return;
+  const raw=$('editText').value,txt=raw.trim(),chosen=$('editOccurred').value;if(!txt||!validDate(chosen)){toast('Add valid text, date and time.');return}
+  saveEditDraft();
+  const ok=await update(next=>{const r=next.items.find(x=>x.id===id);r.text=txt;r.occurredAt=new Date(chosen).toISOString();r.updatedAt=nowISO()});
+  if(ok){editingBase=structuredClone(state.items.find(x=>x.id===id));if($('editText').value===raw&&$('editOccurred').value===chosen){clearEditDraft();$('editDialog').close();editingID=null;editingBase=null;toast('Changes saved.')}else{saveEditDraft();toast('Earlier changes saved. Your newer edits are still here — save again when ready.')}}
+ });
+ document.querySelectorAll('[data-scale]').forEach(b=>b.addEventListener('click',()=>update(next=>{next.preferences.scale=Number(b.dataset.scale)})));
+ $('exportBtn').addEventListener('click',backup);
+ $('importFile').addEventListener('change',async e=>{await restoreBackup(e.target.files[0]);e.target.value='' });
+ window.addEventListener('storage',e=>{if(e.key==='everyday-hq-refresh')toast('This diary was changed in another tab. Reopen it before editing.')});
+}
+async function start(){try{if(location.protocol==='file:')throw new Error('Open the secure website in Safari rather than opening this HTML file in Files.');$('layoutTestNotice').hidden=!LAYOUT_TEST;wire();wireVision();wireProtection();await initStorage();$('boot').hidden=true;$('app').hidden=false;render();status('Ready to save.');loadDraft();initOffline();}
+ catch(err){$('app').hidden=true;$('boot').hidden=true;$('fatal').hidden=false;$('fatalDetail').textContent=err.message||'Unknown storage error';console.error(err)}}
+// Memory views: only saved text is used; no inferred dates or generated stories.
+function possibleCommitment(text) {
+ return /\b(?:i (?:need to|must|will|plan to|have to|am going to)|i['’]ll|remember to|appointment|meeting|deadline|due (?:on|by))\b/i.test(text);
+}
+function renderAssistant() {
+ const items=visibleItems();
+ renderEntries($('followupList'),items.filter(x=>x.followUp),'No follow-ups flagged. Use Follow up on any memory.');
+ renderEntries($('pinnedList'),items.filter(x=>x.pinned),'Pin a memory to keep it here.');
+ renderEntries($('plansList'),items.filter(x=>possibleCommitment(x.text)),'No possible plans found. You can pin any important memory yourself.');
+}
+function renderRecap(items,all) {
+ $('recapPanel').hidden=all;
+ const selected=items.filter(x=>dayKey(x.occurredAt)===$('dayPicker').value);
+ $('recapCount').textContent=selected.length?`${selected.length} ${selected.length===1?'memory recorded':'memories recorded'}. Exact excerpts below; this may not cover your whole day.`:'Nothing recorded for this day. No recap can be made.';
+ const list=$('recapList');list.replaceChildren();
+ for(const item of [...selected].reverse()){
+  const li=document.createElement('li'),b=document.createElement('button');
+  b.type='button';b.className='outline full';b.dataset.action='read';b.dataset.id=item.id;
+  b.textContent=`${formatTime(item.occurredAt)} — ${item.text.slice(0,180)}${item.text.length>180?'…':''}`;
+  li.append(b);list.append(li);
+ }
+}
+
+// Vision HQ: local reading text, predictable focus chunks, browser-local speech.
+const VISION_DRAFT=LAYOUT_TEST?'everydayHQ.test.vision.draft.v1':'everydayHQ.vision.draft.v1';
+let readingOpen=false,focusIndex=0,speechSession=0,currentUtterance=null,speechPaused=false;
+function readingParts(text,limit=500) {
+ const parts=[];
+ for(let paragraph of text.split(/\n+/).filter(x=>x.trim())){
+  while(paragraph.length>limit){let at=paragraph.lastIndexOf(' ',limit);if(at<limit/3)at=limit;parts.push(paragraph.slice(0,at));paragraph=paragraph.slice(at).trimStart()}
+  if(paragraph)parts.push(paragraph);
+ }
+ return parts;
+}
+function readingPreferences() {
+ return {font:Number($('readerSize').value),line:Number($('readerLine').value),spacing:Number($('readerSpacing').value),focus:$('readerFocus').checked};
+}
+function applyReadingPreferences(p) {
+ const reader=$('readerText');reader.style.fontSize=p.font+'px';reader.style.lineHeight=p.line;reader.style.letterSpacing=p.spacing+'px';
+ $('readerSizeValue').textContent=p.font+' px';$('readerLineValue').textContent=p.line+'×';$('readerSpacingValue').textContent=p.spacing+' px';
+}
+function renderReader() {
+ const text=$('visionText').value,p=readingPreferences(),parts=readingParts(text);
+ focusIndex=Math.max(0,Math.min(focusIndex,parts.length-1));
+ $('readerText').textContent=p.focus?(parts[focusIndex]||''):text;
+ $('focusControls').hidden=!p.focus;
+ $('focusPosition').textContent=parts.length?`Part ${focusIndex+1} of ${parts.length}`:'No text';
+ $('focusPrevious').disabled=focusIndex===0;$('focusNext').disabled=focusIndex>=parts.length-1;
+ applyReadingPreferences(p);
+}
+let pendingVision=null,savingVision=false,visionRetry;
+async function commitVisionPreferences(){
+ if(savingVision||!pendingVision)return;
+ if(busy){clearTimeout(visionRetry);visionRetry=setTimeout(commitVisionPreferences,25);return}
+ savingVision=true;const requested={...pendingVision};
+ const ok=await update(next=>{next.preferences.vision=requested});
+ if(!ok){pendingVision=null;renderVisionPreferences()}
+ else if(JSON.stringify(pendingVision)===JSON.stringify(requested))pendingVision=null;
+ savingVision=false;if(pendingVision)commitVisionPreferences();
+}
+function renderVisionPreferences() {
+ const p=pendingVision||state.preferences.vision;
+ $('readerSize').value=p.font;$('readerLine').value=p.line;$('readerSpacing').value=p.spacing;$('readerFocus').checked=p.focus;
+ renderReader();
+}
+function saveReadingDraft() {
+ stopSpeaking();focusIndex=0;
+ try{if($('visionText').value)localStorage.setItem(VISION_DRAFT,$('visionText').value);else localStorage.removeItem(VISION_DRAFT);$('visionDraftStatus').textContent='Reading text stays on this device. It is separate from saved memories and memory backups.'}
+ catch(_){$('visionDraftStatus').textContent='Reading draft could not be kept. Keep the original text before leaving.'}
+ renderReader();
+}
+function openReader() {
+ if(!$('visionText').value.trim()){toast('Add some text to read first.');return}
+ readingOpen=true;$('visionInputPanel').hidden=true;$('visionReaderPanel').hidden=false;renderReader();$('readerText').focus();
+}
+function loadMemoryInReader(item) {
+ $('visionText').value=item.text;saveReadingDraft();navigate('vision');openReader();
+}
+function localVoice() {
+ if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return null;
+ try{
+  const voices=window.speechSynthesis.getVoices().filter(v=>v.localService===true);
+  return voices.find(v=>/^en-GB$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+ }catch(_){return null}
+}
+function updateSpeechAvailability() {
+ const available=Boolean(localVoice());$('speakBtn').disabled=!available;
+ $('speechAvailability').textContent=available?'Read aloud uses an English voice identified by this browser as on-device. No microphone is used.':'No on-device English voice is available in this browser yet. Read aloud is unavailable; try Safari with an English voice installed in iPhone accessibility settings.';
+}
+function stopSpeaking(message='Stopped.') {
+ speechSession++;currentUtterance=null;speechPaused=false;
+ try{if('speechSynthesis' in window)window.speechSynthesis.cancel()}catch(_){}
+ $('speechStatus').textContent=message;$('pauseSpeech').textContent='Pause';$('pauseSpeech').disabled=true;$('stopSpeech').disabled=true;
+}
+function speakReadingText() {
+ const voice=localVoice();if(!voice){updateSpeechAvailability();return}
+ const content=$('readerText').textContent.trim();if(!content){toast('Add some text first.');return}
+ stopSpeaking('Preparing to read…');const session=speechSession,chunks=readingParts(content,220);let at=0;
+ $('stopSpeech').disabled=false;
+ const next=()=>{
+  if(session!==speechSession)return;
+  if(at>=chunks.length){stopSpeaking('Finished reading.');return}
+  const utterance=new SpeechSynthesisUtterance(chunks[at++]);currentUtterance=utterance;
+  utterance.voice=voice;utterance.lang=voice.lang;utterance.rate=.85;
+  utterance.onstart=()=>{if(session!==speechSession)return;$('speechStatus').textContent='Reading aloud.';$('pauseSpeech').disabled=false};
+  utterance.onend=next;
+  utterance.onerror=()=>{if(session===speechSession)stopSpeaking('Could not read aloud. Check your device voice and audio settings, then try again.')};
+  try{window.speechSynthesis.speak(utterance)}catch(_){stopSpeaking('Could not start read aloud on this device.')}
+ };
+ next();
+}
+function wireVision() {
+ try{$('visionText').value=localStorage.getItem(VISION_DRAFT)||''}catch(_){}
+ $('visionText').addEventListener('input',saveReadingDraft);
+ $('openReader').addEventListener('click',openReader);
+ $('readerBack').addEventListener('click',()=>{stopSpeaking();readingOpen=false;$('visionInputPanel').hidden=false;$('visionReaderPanel').hidden=true;$('visionText').focus()});
+ for(const id of ['readerSize','readerLine','readerSpacing','readerFocus']){
+  $(id).addEventListener('input',()=>{pendingVision=readingPreferences();stopSpeaking();renderReader()});
+  $(id).addEventListener('change',()=>{pendingVision=readingPreferences();commitVisionPreferences()});
+ }
+ const move=direction=>{stopSpeaking();focusIndex+=direction;renderReader();$('readerText').focus()};
+ $('focusPrevious').addEventListener('click',()=>move(-1));$('focusNext').addEventListener('click',()=>move(1));
+ $('speakBtn').addEventListener('click',speakReadingText);
+ $('pauseSpeech').addEventListener('click',()=>{if(!currentUtterance)return;const synth=window.speechSynthesis;if(speechPaused){synth.resume();speechPaused=false;$('pauseSpeech').textContent='Pause';$('speechStatus').textContent='Reading aloud.'}else{synth.pause();speechPaused=true;$('pauseSpeech').textContent='Resume';$('speechStatus').textContent='Paused.'}});
+ $('stopSpeech').addEventListener('click',()=>stopSpeaking());
+ try{if('speechSynthesis' in window)window.speechSynthesis.addEventListener('voiceschanged',updateSpeechAvailability)}catch(_){}
+ window.addEventListener('pagehide',()=>stopSpeaking());updateSpeechAvailability();
+}
+
+// Local search: every unquoted word must match; quoted phrases stay together.
+function searchTerms(query){return [...query.matchAll(/["“]([^"”]+)["”]|(\S+)/g)].map(m=>(m[1]||m[2]).toLocaleLowerCase()).filter(Boolean)}
+function termPattern(terms,whole=false){
+ const escaped=[...new Set(terms)].sort((a,b)=>b.length-a.length).map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+ return new RegExp((whole?'(^|[^\\p{L}\\p{N}_])':'()')+'('+escaped.join('|')+')'+(whole?'(?=$|[^\\p{L}\\p{N}_])':''),'giu');
+}
+function searchMemories(items,query,from='',to='',whole=false){
+ const terms=searchTerms(query);
+ return items.filter(item=>{const date=dayKey(item.occurredAt),text=item.text.toLocaleLowerCase();return(!from||date>=from)&&(!to||date<=to)&&terms.every(term=>whole?termPattern([term],true).test(text):text.includes(term))});
+}
+function highlightText(container,text,terms,whole=false){
+ if(!terms.length){container.textContent=text;return}
+ const pattern=termPattern(terms,whole);let last=0;
+ for(const match of text.matchAll(pattern)){const at=match.index+match[1].length;container.append(document.createTextNode(text.slice(last,at)));const mark=document.createElement('mark');mark.textContent=match[2];container.append(mark);last=at+match[2].length}
+ container.append(document.createTextNode(text.slice(last)));
+}
+function sevenDayBounds(now=new Date()){
+ const start=new Date(now);start.setHours(12,0,0,0);start.setDate(start.getDate()-6);return{from:dayKey(start),to:dayKey(now)};
+}
+function weekMemories(items,now=new Date()){const {from,to}=sevenDayBounds(now);return items.filter(item=>{const key=dayKey(item.occurredAt);return key>=from&&key<=to})}
+
+// Edit drafts are never applied to an existing memory without user review.
+const EDIT_DRAFT_KEY=LAYOUT_TEST?'everydayHQ.test.editDraft.v1':'everydayHQ.editDraft.v1';
+const BACKUP_STATUS_KEY=LAYOUT_TEST?'everydayHQ.test.backupStatus.v1':'everydayHQ.backupStatus.v1';
+let editingBase=null;
+function editIsDirty(){return Boolean(editingBase&&($('editText').value!==editingBase.text||$('editOccurred').value!==localTimeInput(editingBase.occurredAt)))}
+function saveEditDraft(){
+ if(!$('editDialog').open||!editingBase||!editIsDirty())return true;
+ try{localStorage.setItem(EDIT_DRAFT_KEY,JSON.stringify({id:editingID,text:$('editText').value,occurredAt:$('editOccurred').value,baseUpdatedAt:editingBase.updatedAt,baseText:editingBase.text,baseOccurredAt:editingBase.occurredAt,when:nowISO()}));renderEditRecovery();return true}
+ catch(_){toast('The edit draft could not be kept. Save your changes before leaving.');return false}
+}
+function clearEditDraft(){try{localStorage.removeItem(EDIT_DRAFT_KEY)}catch(_){}renderEditRecovery()}
+function editDraft(){try{const draft=JSON.parse(localStorage.getItem(EDIT_DRAFT_KEY));return draft&&typeof draft.id==='string'&&typeof draft.text==='string'&&draft.text.length<=12000&&validDate(draft.occurredAt)?draft:null}catch(_){return null}}
+function renderEditRecovery(){
+ const draft=editDraft();$('editRecovery').hidden=!draft;
+ if(draft)$('editRecoveryText').textContent=draft.text.slice(0,220)+(draft.text.length>220?'…':'');
+}
+function recoverEdit(){
+ const draft=editDraft();if(!draft)return;
+ const item=state.items.find(x=>x.id===draft.id&&!x.deletedAt);
+ if(item&&item.updatedAt===draft.baseUpdatedAt&&item.text===draft.baseText&&item.occurredAt===draft.baseOccurredAt){selectEdit(item.id);$('editText').value=draft.text;$('editOccurred').value=draft.occurredAt;return}
+ if($('memoryText').value.trim()){toast('Save your current memory draft before recovering this edit.');return}
+ // A deleted or subsequently edited original must not be overwritten.
+ $('memoryText').value=draft.text;$('occurredAt').value=draft.occurredAt;$('whenDetails').open=true;
+ if(saveDraft()){clearEditDraft();navigate('write');toast('Original changed or was deleted. Recovered text is a new unsaved memory.')}
+}
+function cancelEdit(){if(editIsDirty()&&!confirm('Discard these unsaved edits?'))return;clearEditDraft();$('editDialog').close();editingID=null;editingBase=null}
+function renderBackupStatus(){
+ let stamp;try{stamp=JSON.parse(localStorage.getItem(BACKUP_STATUS_KEY))?.exportedAt}catch(_){}
+ const message=validDate(stamp)?`Last backup export requested: ${formatDate(stamp)} at ${formatTime(stamp)}. File saving is not verified — check Files.`:'No backup export recorded on this device yet.';
+ $('backupSummary').textContent=message;$('backupSettingsStatus').textContent=message;
+}
+
+// Offline shell and explicit update activation. No diary data goes to the worker.
+let appRegistration=null,reloadForUpdate=false;
+function offlineMessage(text){$('offlineStatus').textContent=text}
+function offerUpdate(){if(appRegistration?.waiting){$('applyUpdate').hidden=false;$('updateStatus').textContent='An app update is ready. Your saved memories stay on this device.'}}
+async function refreshOfflineStatus(){
+ const worker=navigator.serviceWorker?.controller;
+ if(!worker){offlineMessage('Offline copy is not ready yet. Keep this app open online for a moment.');return}
+ try{
+  const result=await new Promise((resolve,reject)=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(Error('No offline status'))},4000);channel.port1.onmessage=event=>{clearTimeout(timer);channel.port1.close();resolve(event.data)};worker.postMessage({type:'OFFLINE_STATUS'},[channel.port2])});
+  offlineMessage(result.ready?'Offline copy ready on this device. Memories save locally with or without a connection.':'Offline copy is unavailable. Reopen online to prepare it.');
+ }catch(_){offlineMessage('Offline readiness could not be verified. Reopen online before relying on offline access.')}
+}
+function preserveBeforeUpdate(){
+ if(busy){toast('Wait for the current save to finish, then update.');return false}
+ if($('memoryText').value.trim()&&!saveDraft())return false;
+ if(!saveEditDraft())return false;
+ try{if($('visionText').value)localStorage.setItem(VISION_DRAFT,$('visionText').value)}catch(_){toast('Reading text could not be kept. Keep a copy before updating.');return false}
+ return true;
+}
+function applyAppUpdate(){
+ if(!preserveBeforeUpdate())return;
+ if(!appRegistration?.waiting){toast('No waiting update. Reopen the app when convenient.');return}
+ try{reloadForUpdate=true;$('applyUpdate').disabled=true;appRegistration.waiting.postMessage({type:'ACTIVATE_UPDATE'})}catch(_){reloadForUpdate=false;$('applyUpdate').disabled=false;toast('Update could not start. Your current app and memories are still available.')}
+}
+async function initOffline(){
+ if(LAYOUT_TEST){offlineMessage('Test mode: offline registration is managed by the normal app.');return}
+ if(!('serviceWorker' in navigator)||mode!=='browser'){offlineMessage('Offline reopening is unavailable in this browser. Saved memories still stay on this device.');return}
+ try{
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloadForUpdate){reloadForUpdate=false;if(preserveBeforeUpdate())location.reload();else{$('applyUpdate').disabled=false;$('updateStatus').textContent='Update installed. Finish saving, then reopen when convenient.'}return}refreshOfflineStatus()});
+  appRegistration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
+  offerUpdate();
+  appRegistration.addEventListener('updatefound',()=>{const worker=appRegistration.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='installed'){offerUpdate();refreshOfflineStatus()}})});
+  await refreshOfflineStatus();
+ }catch(_){offlineMessage('Offline setup could not finish. Keep using the app online and try reopening later.')}
+}
+function wireProtection(){
+ $('toggleDates').addEventListener('click',()=>{
+  const expanded=$('toggleDates').getAttribute('aria-expanded')!=='true';
+  $('toggleDates').setAttribute('aria-expanded',String(expanded));$('dateFields').hidden=!expanded;
+  $('toggleDates').textContent=expanded?'Hide date range':'Show date range';
+ });
+ document.addEventListener('click',event=>{if(!$('toolsMenu').contains(event.target))$('toolsMenu').open=false});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('toolsMenu').open){$('toolsMenu').open=false;$('toolsMenu').querySelector('summary').focus()}});
+ $('quickBackup').addEventListener('click',backup);
+ $('editText').addEventListener('input',saveEditDraft);$('editOccurred').addEventListener('input',saveEditDraft);
+ $('editDialog').addEventListener('cancel',event=>{event.preventDefault();cancelEdit()});
+ $('recoverEdit').addEventListener('click',recoverEdit);
+ $('applyUpdate').addEventListener('click',applyAppUpdate);
+ for(const id of ['searchFrom','searchTo'])$(id).addEventListener('change',render);
+ $('clearSearch').addEventListener('click',()=>{$('searchInput').value='';$('searchFrom').value='';$('searchTo').value='';$('wholeNames').checked=false;render()});
+ $('showWeek').addEventListener('click',()=>{dayMode='week';render()});
+ const keepDrafts=()=>{if($('memoryText').value.trim())saveDraft();saveEditDraft()};
+ window.addEventListener('pagehide',keepDrafts);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)keepDrafts();else{render();renderBackupStatus();appRegistration?.update().catch(()=>{});offerUpdate()}});
+}
+
+// Inline scripts ignore defer. Wait until the body and error panel exist.
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start,{once:true})}else{start()}
+</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <div class="shell" id="app" hidden>
+    <p class="panel help" id="layoutTestNotice" hidden>Layout test only — this uses separate test storage, not your live diary.</p>
+    <header class="top">
+      <div class="brand"><span class="brandmark" role="img" aria-label="Earle’s Bureau"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30H29C38 30 38 20 29 20H24M24 10H29C37 10 37 20 29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>Everyday HQ</strong><span>Earle’s Bureau</span></div></div>
+      <details class="tools" id="toolsMenu"><summary>Tools</summary><nav class="tool-menu" aria-label="Tools and settings">
+        <button class="tool-link" id="openVision" data-page="vision" type="button">Vision</button>
+        <button class="tool-link" id="openAssistant" data-page="assistant" type="button">Assistant</button>
+        <button class="tool-link" id="settingsOpen" type="button" aria-label="Open settings and backups">Settings &amp; backups</button>
+      </nav></details>
+    </header>
+    <nav class="tabs" id="memoryNav" aria-label="Main navigation">
+      <button class="tab selected" id="nav-write" data-page="write" aria-current="page" type="button">Remember</button>
+      <button class="tab" id="nav-days" data-page="days" type="button">My Days</button>
+      <button class="tab" id="nav-find" data-page="find" type="button">Find</button>
+    </nav>
+    <main id="main">
+      <section class="page" id="page-write" aria-labelledby="heading-write">
+        <h1 id="heading-write" tabindex="-1">New memory</h1>
+        <form id="addForm" class="stack">
+          <label class="sr" for="memoryText">Your memory</label>
+          <textarea id="memoryText" maxlength="12000" rows="3" placeholder="What would you like to remember?" required autocomplete="off"></textarea>
+          <button class="primary full" id="saveBtn" type="submit">Save memory</button>
+        <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready to save.</div>
+          <details class="when" id="whenDetails">
+            <summary>Change event time <span class="soft">(optional)</span></summary>
+            <label for="occurredAt">Date and time of the event</label>
+            <input id="occurredAt" type="datetime-local">
+            <p class="help">Leave unchanged to use the current date and time.</p>
+          </details>
+        </form>
+        <nav class="date-buttons quick-days" aria-label="Recent memories"><button class="outline" id="quickToday" type="button">Today</button><button class="outline" id="quickYesterday" type="button">Yesterday</button></nav>
+        <p id="lastMemorySave" class="help"></p>
+        <section id="recentMemory" class="panel" aria-labelledby="recentHeading" hidden><div class="row titlebar"><h2 id="recentHeading">Last recorded memory</h2><button id="editRecent" class="outline tiny" data-action="edit" type="button">Edit last memory</button></div><p id="recentMemoryTime" class="help"></p><p id="recentMemoryText"></p></section>
+        <p class="device-note">Saved on this device. Keep a backup in Files.</p>
+        <button class="outline full" id="quickBackup" type="button">Back up memories</button><p id="backupSummary" class="help"></p>
+        <div class="divider"></div>
+        <div class="row titlebar"><h2>Recorded today</h2><button class="outline tiny" id="todayAll" type="button">My Days</button></div>
+        <div id="todayList" class="entries"></div>
+      </section>
+      <section class="page" id="page-days" aria-labelledby="heading-days" hidden>
+        <h1 id="heading-days" tabindex="-1">My Days</h1>
+        <div class="controls-date">
+          <div class="date-buttons"><button class="outline" id="showToday" type="button">Today</button><button class="outline" id="showYesterday" type="button">Yesterday</button><button class="outline" id="showWeek" type="button">Last 7 days</button><button class="outline" id="showAll" type="button">All days</button></div>
+          <label for="dayPicker">Choose a date</label>
+          <input id="dayPicker" type="date">
+          <div class="day-step" role="group" aria-label="Browse one day at a time"><button class="outline" id="previousDay" type="button">Previous day</button><button class="outline" id="nextDay" type="button">Next day</button></div>
+        </div>
+        <h2 id="chosenDateHeading"></h2><p class="help" id="dayModeStatus"></p>
+        <details class="when" id="recapPanel"><summary>Daily recap</summary><p id="recapCount" class="help"></p><ul id="recapList" class="recap-list"></ul></details>
+        <div id="dayList" class="entries"></div>
+      </section>
+      <section class="page" id="page-find" aria-labelledby="heading-find" hidden>
+        <h1 id="heading-find" tabindex="-1">Find a memory</h1>
+        <label for="searchInput">Name, word or phrase</label>
+        <input id="searchInput" type="search" maxlength="1000" placeholder="Search your memories" autocomplete="off">
+        <label class="check-row"><input id="wholeNames" type="checkbox"> Match whole names or words</label>
+        <div class="date-filter"><button id="toggleDates" class="outline full" type="button" aria-expanded="false" aria-controls="dateFields">Show date range</button><div id="dateFields" class="stack" hidden><label for="searchFrom">From date</label><input id="searchFrom" type="date"><label for="searchTo">To date</label><input id="searchTo" type="date"><p class="help">Dates keep filtering until you clear search.</p></div></div>
+        <button class="outline" id="clearSearch" type="button">Clear search</button>
+        <details class="when search-help" id="searchHelp"><summary>Search tips</summary><p class="help">Use quotes for an exact phrase. All search words must match.</p><p class="help">Whole-name matching keeps Ann separate from Joanna. Use names as written; nicknames are not linked.</p></details>
+        <p id="findCount" class="info" role="status" aria-live="polite"></p>
+        <div id="searchList" class="entries"></div>
+      </section>
+      <section class="page" id="page-vision" aria-labelledby="heading-vision" hidden>
+        <h1 id="heading-vision" tabindex="-1">Vision HQ</h1>
+        <div id="visionInputPanel" class="stack">
+          <p>Paste or type text, or tap Read on a saved memory.</p>
+          <label for="visionText">Text to read</label>
+          <textarea id="visionText" rows="7" maxlength="60000" autocomplete="off" placeholder="Paste text here"></textarea>
+          <button class="primary full" id="openReader" type="button">Open reader</button>
+          <p class="help" id="visionDraftStatus">Reading text stays on this device. It is separate from saved memories and memory backups.</p>
+        </div>
+        <div id="visionReaderPanel" class="stack" hidden>
+          <button class="outline" id="readerBack" type="button">Back to text</button>
+          <details class="when"><summary>Reading settings</summary><div class="stack reader-settings">
+            <label for="readerSize">Letter size: <output id="readerSizeValue" for="readerSize"></output></label><input id="readerSize" type="range" min="28" max="80" step="2" value="40">
+            <label for="readerLine">Line spacing: <output id="readerLineValue" for="readerLine"></output></label><input id="readerLine" type="range" min="1.4" max="2.4" step="0.2" value="1.8">
+            <label for="readerSpacing">Letter spacing: <output id="readerSpacingValue" for="readerSpacing"></output></label><input id="readerSpacing" type="range" min="0" max="6" step="1" value="0">
+            <label class="check-row" for="readerFocus"><input id="readerFocus" type="checkbox">Focus: one short part at a time</label>
+          </div></details>
+          <div id="readerText" class="reader" tabindex="0" role="region" aria-label="Reading text"></div>
+          <div id="focusControls" class="stack" hidden><p id="focusPosition" role="status"></p><div class="row"><button class="outline" id="focusPrevious" type="button">Previous part</button><button class="outline" id="focusNext" type="button">Next part</button></div></div>
+          <button class="primary full" id="speakBtn" type="button">Read aloud</button>
+          <div class="speech-buttons"><button class="outline" id="pauseSpeech" type="button" disabled>Pause</button><button class="outline" id="stopSpeech" type="button" disabled>Stop</button></div>
+          <p id="speechStatus" role="status" aria-live="polite"></p><p id="speechAvailability" class="help"></p>
+        </div>
+      </section>
+      <section class="page" id="page-assistant" aria-labelledby="heading-assistant" hidden>
+        <h1 id="heading-assistant" tabindex="-1">Everyday Assistant</h1>
+        <h2>Follow-ups</h2><p class="help">Memories you flag yourself. Clear a flag when finished; the memory stays saved. No notifications.</p><div id="followupList" class="entries"></div><div class="divider"></div>
+        <h2>Important memories</h2><p class="help">Your pinned memories.</p><div id="pinnedList" class="entries"></div>
+        <div class="divider"></div><h2>Possible plans</h2><p class="help">Saved entries containing words such as “I need to”, “meeting” or “appointment”. These are your exact entries, not verified tasks or scheduled reminders. Negatives, quotes and completed plans can appear here. Pin anything important yourself.</p><div id="plansList" class="entries"></div>
+      </section>
+      <section class="page" id="page-settings" aria-labelledby="heading-settings" hidden>
+        <div class="row titlebar"><h1 id="heading-settings" tabindex="-1">Settings</h1><button class="outline tiny" id="settingsClose" type="button">Back</button></div>
+        <div class="panel stack">
+          <h2>Text size</h2>
+          <p>Everything stays white on a very dark background.</p>
+          <div class="sizes" role="group" aria-label="Text size">
+            <button class="outline" type="button" data-scale="1">Large</button>
+            <button class="outline" type="button" data-scale="1.2">Extra large</button>
+            <button class="outline" type="button" data-scale="1.4">Huge</button>
+          </div>
+        </div>
+        <div class="panel stack">
+          <h2>Back up your memories</h2>
+          <p>Keep a copy in Files. Backups are <strong>not encrypted</strong>. Choosing iCloud Drive uploads the file to your Apple account.</p>
+          <button class="outline full" type="button" id="exportBtn">Export backup</button><p id="backupSettingsStatus" class="help"></p><p id="lastMemorySaveSettings" class="help"></p><p class="help">Exports contain saved memories and settings. Unsaved drafts are kept separately on this device.</p>
+          <label for="importFile">Restore or transfer a backup</label>
+          <input type="file" id="importFile" accept="application/json,.json">
+          <p class="help">Import keeps existing memories and adds new ones. Your original memories remain on this iPhone. You can import previous backups without replacing everything.</p>
+        </div>
+        <div class="panel stack" id="editRecovery" hidden><h2>Recovered edit</h2><p>An unsaved edit was kept on this device. Review it before saving.</p><p id="editRecoveryText"></p><button class="outline" id="recoverEdit" type="button">Recover edit</button></div>
+        <div class="panel stack"><h2>Recently deleted</h2><p>Restore a memory you deleted by mistake.</p><div class="entries" id="deletedList"></div></div>
+        <div class="panel stack"><h2>Your privacy</h2><p id="storageDescription"></p><p>This app has no account, advertisements or analytics. Don't use it for passwords or extremely sensitive information. Browser data can still be lost if browser storage is cleared.</p></div>
+        <div class="panel stack"><h2>iPhone installation</h2><p>Open this website in Safari, tap Share, then Add to Home Screen. If shown, turn on Open as Web App, then tap Add. Start recording memories using your new Home Screen icon.</p></div>
+        <div class="panel stack"><h2>Offline &amp; updates</h2><p id="offlineStatus" role="status">Checking offline readiness…</p><p id="updateStatus"></p><button class="outline" id="applyUpdate" type="button" hidden>Install update &amp; reopen</button><p class="help">Open online once after this release to prepare offline reopening. Offline copies and memories can still be lost if device storage is cleared. Updates never synchronise memories between devices.</p></div>
+        <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.12.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
+      </section>
+    </main>
+    <footer>Everyday HQ · Earle’s Bureau</footer>
+  </div>
+  <div id="boot" class="boot" role="status">Opening Everyday HQ…<p class="help">If this stays here, close other Everyday HQ tabs and reopen this page. Do not clear Safari data.</p><noscript><p>JavaScript must be enabled in Safari to open your diary.</p></noscript></div>
+  <div id="fatal" class="fatal" role="alert" hidden><h1 tabindex="-1">Could not load memories</h1><p>Your saved information was not changed. Close and reopen the app. Do not record anything new here until the problem is resolved.</p><p id="fatalDetail"></p></div>
+  <dialog id="editDialog" aria-labelledby="editTitle"><form id="editForm" class="stack" method="dialog">
+      <h2 id="editTitle">Edit memory</h2>
+      <label for="editText">What happened?</label>
+      <textarea id="editText" rows="6" maxlength="12000" required></textarea>
+      <label for="editOccurred">When did it happen?</label><input id="editOccurred" type="datetime-local" required>
+      <div class="row"><button class="outline" id="cancelEdit" type="button">Cancel</button><button class="primary" id="confirmEdit" type="submit">Save changes</button></div>
+    </form></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -42,7 +42,7 @@ function workerHarness({badShell=false}={}){
  d.getElementById('searchFrom').value='2099-01-01';w.render();assert(d.getElementById('findCount').textContent.includes('From date'));d.getElementById('clearSearch').click();assert.equal(d.getElementById('searchTo').value,'');
  const fixed=new Date('2026-10-26T12:00:00Z'),bounds=w.sevenDayBounds(fixed);assert.equal(bounds.from,'2026-10-20');assert.equal(bounds.to,'2026-10-26');
  assert.equal(w.weekMemories([row('a','A','2026-10-20T12:00:00Z'),row('b','B','2026-10-19T12:00:00Z'),row('c','C','2026-10-27T12:00:00Z')],fixed).length,1);
- w.navigate('days');d.getElementById('showWeek').click();assert.equal(d.getElementById('dayPicker').disabled,true);assert(d.getElementById('dayModeStatus').textContent.includes('2 saved memories'));
+ w.navigate('days');d.getElementById('showWeek').click();assert.equal(d.getElementById('dayPicker').disabled,false);assert(d.getElementById('dayModeStatus').textContent.includes('2 saved memories'));
  w.navigate('write');d.querySelector('#todayList [data-action=followup]').click();await wait(()=>!w.eval('busy'));assert(state(w).items.find(x=>x.id==='sample').followUp);assert.equal(d.querySelectorAll('#followupList article').length,1);
  let exported;w.saveFile=(name,body)=>exported=JSON.parse(body);await w.backup();assert(exported.items.some(x=>x.followUp));assert(d.getElementById('backupSummary').textContent.includes('export requested'));assert(d.getElementById('backupSummary').textContent.includes('not verified'));
  const metadata=w.localStorage.getItem('everydayHQ.backupStatus.v1');w.saveFile=()=>{throw Error('Synthetic download failure')};await w.backup();assert.equal(w.localStorage.getItem('everydayHQ.backupStatus.v1'),metadata);

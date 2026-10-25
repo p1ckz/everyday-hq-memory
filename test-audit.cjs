@@ -20,6 +20,23 @@ async function action(selector){const el=d.querySelector(selector);assert(el,sel
  await wait(()=>$('boot').hidden);assert($('fatal').hidden);assert.deepEqual(errors,[]);
  for(const b of d.querySelectorAll('[data-page]')){b.click();await settle();assert(!$('page-'+b.dataset.page).hidden);checked.add(b.id||'hub:'+b.dataset.hub)}
  d.querySelector('[data-hub=memory]').click();
+ // Direct recent-day access, uninterrupted calendar use and calendar-day stepping.
+ input('memoryText','SYNTHETIC draft survives date browsing');
+ const preservedDraft=$('memoryText').value;
+ await click('quickYesterday');assert(!$('page-days').hidden);
+ const yesterdayKey=$('dayPicker').value;assert.equal($('showYesterday').getAttribute('aria-pressed'),'true');
+ await click('nextDay');assert.equal($('dayPicker').value,w.eval('dayKey(nowISO())'));
+ await click('previousDay');assert.equal($('dayPicker').value,yesterdayKey);
+ await click('showAll');assert(!$('dayPicker').disabled);assert.equal($('showAll').getAttribute('aria-pressed'),'true');
+ input('dayPicker','2026-03-29','change');await click('nextDay');assert.equal($('dayPicker').value,'2026-03-30');
+ await click('previousDay');assert.equal($('dayPicker').value,'2026-03-29');
+ await click('showWeek');assert(!$('dayPicker').disabled);input('dayPicker','2026-10-25','change');
+ assert.equal($('showWeek').getAttribute('aria-pressed'),'false');
+ input('dayPicker','2024-03-01','change');await click('previousDay');assert.equal($('dayPicker').value,'2024-02-29');
+ input('dayPicker','2026-01-01','change');await click('previousDay');assert.equal($('dayPicker').value,'2025-12-31');
+ input('dayPicker','','change');assert.equal($('dayPicker').value,w.eval('dayKey(nowISO())'));
+ await click('nav-write');assert.equal($('memoryText').value,preservedDraft);
+ await click('quickToday');assert.equal($('dayPicker').value,w.eval('dayKey(nowISO())'));await click('nav-write');
  summary('#whenDetails summary');input('memoryText','SYNTHETIC Ann: I need to arrange a sample meeting.');input('occurredAt','2026-10-24T12:00');await submit('saveBtn');assert.equal(state().items.length,1);assert($('saveStatus').textContent.includes('Memory saved on this device'));
  const id=state().items[0].id;await click('editRecent');assert($('editDialog').open);input('editText','SYNTHETIC Ann: I need to arrange a sample meeting. Edited.');input('editOccurred','2026-10-23T12:00');await submit('confirmEdit');assert(!$('editDialog').open);assert.equal(state().items[0].text,$('editText').value);
  await click('editRecent');await click('cancelEdit');assert(!$('editDialog').open);
@@ -54,6 +71,6 @@ async function action(selector){const el=d.querySelector(selector);assert(el,sel
  await click('nav-days');await click('showAll');await action('#dayList [data-action=read]');assert(!$('page-vision').hidden);d.querySelector('[data-hub=memory]').click();await click('nav-days');await click('showAll');allow=false;await action('#dayList [data-action=delete]');assert(!state().items[0].deletedAt);allow=true;await action('#dayList [data-action=delete]');assert(state().items[0].deletedAt);await click('settingsOpen');await action('#deletedList [data-action=restore]');assert(!state().items[0].deletedAt);
  checked.add('skip:#main');assert.equal(d.querySelector('.skip').getAttribute('href'),'#main');assert.equal(d.querySelector('#toggleDates').getAttribute('type'),'button');assert.equal(d.querySelector('#toggleDates').getAttribute('aria-controls'),'dateFields');
  const staticControls=[...d.querySelectorAll('button[id],input[id],textarea[id]')].map(x=>x.id);const workerOnly=['applyUpdate'];assert.deepEqual(staticControls.filter(id=>!checked.has(id)&&!workerOnly.includes(id)),[],'Every static interactive id must be exercised');
- assert.deepEqual(errors,[]);console.log('PASS: '+checked.size+' control paths, all static button/input IDs, every navigation tab; details, dates, edits, cancel/Escape, recovery, flags, recap reader, all reader controls and mocked speech; backup buttons/file import; delete cancel/restore; explicit date disclosure and collapsed active-date feedback. Update guards and real worker lifecycle are covered by test-next.cjs.');
+ assert.deepEqual(errors,[]);console.log('PASS: '+checked.size+' control paths, all static button/input IDs, every navigation tab; details, dates, edits, cancel/Escape, recovery, flags, recap reader, all reader controls and mocked speech; backup buttons/file import; delete cancel/restore; explicit date disclosure, recent-day shortcuts, always-available calendar, leap/year/DST day navigation, empty-date recovery and retained draft while browsing. Update guards and real worker lifecycle are covered by test-next.cjs.');
  w.eval('db.close()');w.close();
 })().catch(e=>{console.error(e);w.close();process.exitCode=1});

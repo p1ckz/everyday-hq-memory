@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070707">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-Vg7uPH2RH+REaFjBSZ73e6DfRK241xFET3hxrCzjq1A='; style-src 'sha256-rJuu67hQITYfNdAxkF1Qo9L4IaWN3tWOf2N7eNDfGaY='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; worker-src 'self'; script-src 'sha256-Vg7uPH2RH+REaFjBSZ73e6DfRK241xFET3hxrCzjq1A='; style-src 'sha256-OwtQsl64OogfB5yonQLrJpKCCaHsMY/Bq8BqZuxd3BI='; img-src data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Everyday HQ">
@@ -12,8 +12,8 @@
   <meta name="description" content="A clear, simple diary for remembering your day.">
   <style>:root{color-scheme:dark;--scale:1;--bg:#070707;--panel:#141414;--text:#fff;--border:#737373;--focus:#ffde59}
 *{box-sizing:border-box}
-html{font-size:calc(22px * var(--scale));scroll-behavior:auto;-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+html{overscroll-behavior-x:none;font-size:calc(22px * var(--scale));scroll-behavior:auto;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);min-width:0}
 button,input,textarea{font:inherit;color:inherit;touch-action:manipulation}
 button{cursor:pointer}input,textarea{display:block;background:#101010;border:1px solid var(--border);border-radius:16px;padding:.65rem .75rem;width:100%;min-width:0;max-width:100%}
 textarea{resize:vertical;min-height:188px;line-height:1.6;font-size:1rem}
@@ -572,7 +572,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
   <div class="shell" id="app" hidden>
     <p class="panel help" id="layoutTestNotice" hidden>Layout test only — this uses separate test storage, not your live diary.</p>
     <header class="top">
-      <div class="brand"><span class="brandmark" role="img" aria-label="Earle’s Bureau"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30H29C38 30 38 20 29 20H24M24 10H29C37 10 37 20 29 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>Everyday HQ</strong><span>Earle’s Bureau</span></div></div>
+      <div class="brand"><span class="brandmark" role="img" aria-label="Everyday HQ"><svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true" focusable="false"><path d="M8 10H19M8 10V30H19M8 20H17M24 10V30M24 20H34M34 10V30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>Everyday HQ</strong><span>Nathan’s Journal</span></div></div>
       <details class="tools" id="toolsMenu"><summary>Tools</summary><nav class="tool-menu" aria-label="Tools and settings">
         <button class="tool-link" id="openVision" data-page="vision" type="button">Vision</button>
         <button class="tool-link" id="openAssistant" data-page="assistant" type="button">Assistant</button>
@@ -688,7 +688,7 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
         <div class="panel stack"><h2>App information</h2><p>Everyday HQ version 1.12.0 — Memory, Vision and Assistant.</p><p>No microphone, reminders or accounts. Read-aloud availability depends on the device. After offline setup is ready on this device, the app can reopen and save memories without a connection. Internet is needed to receive updates. Draft text and your chosen event time are kept on this device while you type, but it is not a saved memory until you press SAVE. Export backups regularly.</p></div>
       </section>
     </main>
-    <footer>Everyday HQ · Earle’s Bureau</footer>
+    <footer>Everyday HQ · Nathan’s Journal</footer>
   </div>
   <div id="boot" class="boot" role="status">Opening Everyday HQ…<p class="help">If this stays here, close other Everyday HQ tabs and reopen this page. Do not clear Safari data.</p><noscript><p>JavaScript must be enabled in Safari to open your diary.</p></noscript></div>
   <div id="fatal" class="fatal" role="alert" hidden><h1 tabindex="-1">Could not load memories</h1><p>Your saved information was not changed. Close and reopen the app. Do not record anything new here until the problem is resolved.</p><p id="fatalDetail"></p></div>

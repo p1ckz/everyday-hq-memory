@@ -38,7 +38,7 @@ function close(dom){dom.window.eval('db.close()');dom.window.close()}
  assert(d.getElementById('recapCount').textContent.startsWith('1 memory recorded'));assert(d.getElementById('recapList').textContent.includes(old.items[0].text));
  d.querySelector('#dayList [data-action=delete]').click();await settle(w);assert.equal(d.querySelectorAll('#plansList article').length,0);assert.equal(d.querySelectorAll('#pinnedList article').length,0);assert.equal(d.querySelectorAll('#recapList li').length,0);
  w.navigate('settings');d.querySelector('#deletedList button').click();await settle(w);assert(state(w).items[0].pinned);
- w.navigate('assistant');d.querySelector('#pinnedList [data-action=read]').click();assert.equal(w.eval('page'),'vision');assert.equal(d.getElementById('readerText').textContent,old.items[0].text);assert.equal(d.getElementById('visionReaderPanel').hidden,false);assert.equal(d.getElementById('memoryNav').hidden,true);
+ w.navigate('assistant');d.querySelector('#pinnedList [data-action=read]').click();assert.equal(w.eval('page'),'vision');assert.equal(d.getElementById('readerText').textContent,old.items[0].text);assert.equal(d.getElementById('visionReaderPanel').hidden,false);assert.equal(d.getElementById('memoryNav').hidden,false);
  const text='SYNTHETIC reader text. '.repeat(70)+'\nSecond paragraph <script>unsafe()</script>.';
  d.getElementById('readerBack').click();field(w,'visionText',text);d.getElementById('openReader').click();assert.equal(d.getElementById('readerText').textContent,text);assert.equal(d.querySelectorAll('#readerText script').length,0);
  const prefs={readerSize:'80',readerLine:'2.4',readerSpacing:'6'};

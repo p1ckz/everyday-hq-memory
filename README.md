@@ -51,3 +51,13 @@ Release 1.11.0 adds Today and Yesterday shortcuts immediately below the memory f
 Rollback source checkpoint: `8a61757e197984c15070402efd5100f8720b30bf` (1.10.2). To roll back presentation, restore that index.html and publish it with a fresh matching app/worker version and regenerated CSP hashes; never roll back, clear or replace user storage.
 
 Release 1.11.1 stacks Previous day / Next day at widths of 360 px and below to keep Huge text from breaking inside the word Previous. The release-specific layout test URLs avoid stale browser HTML. App logic, storage and backups are unchanged.
+
+Release 1.12.0 refines the existing interface. Remember / My Days / Find form one primary navigation level and remain available from Vision and Assistant. A header Tools menu opens Vision, Assistant and Settings & backups. Assistant still contains Follow-ups, Important memories and Possible plans. Menu actions close it, Escape returns focus to Tools, and outside taps dismiss it. Page changes focus their heading without opening the iPhone keyboard. No memory, search, backup, reader or persistence logic is changed.
+
+Controls retain large interface text and generous touch targets, with softer rounding and fewer repeated outlines. Find's longer guidance is available under Search tips. The recording box and Save are nearer the top. Check native Home Screen menu placement, keyboard clearance and Files behaviour on iPhone. Rollback checkpoint: `6cf834c0a9b91ba8982ad83aa0d204b8961f0b25` (1.11.1); restore presentation with a new matched app/worker release, never user storage.
+
+Personal branding in 1.12.0 uses Everyday HQ / Nathan’s Journal and an EH header monogram. The app name, Apple Home Screen title, origin, path and all storage keys remain unchanged. Left/right safe-area padding protects landscape edges. Layout checks include a 390 × 400 compact-height frame to check reduced vertical space; this does not emulate the native iPhone keyboard. Long unbroken entries, open menus, date controls, edit dialogs, reader extremes and all pages must fit at 320/390/430 widths. Horizontal overflow is measured, not hidden with overflow-x.
+
+Root horizontal overscroll is disabled where the browser supports it, while vertical scrolling and pinch zoom remain available. This suppresses lateral elastic movement; it does not conceal overflow or clip content. Native Safari behaviour still requires device verification.
+
+The interface-preview entry point now redirects to the current index with layout-test=1. The generated pre-release copy is not retained as a second app implementation. These developer URLs never select the live diary.
